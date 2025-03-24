@@ -6,7 +6,7 @@ import 'package:rubigo_router/rubigo_router.dart';
 /// [RubigoControllerMixin] (but doesn't have to). This set is uniquely
 /// identified by a [SCREEN_ID].
 @immutable
-class RubigoScreen<SCREEN_ID extends Enum> {
+class RubigoScreen<SCREEN_ID extends Object> {
   /// Creates a [RubigoScreen]
   RubigoScreen(
     this.screenId,
@@ -17,7 +17,7 @@ class RubigoScreen<SCREEN_ID extends Enum> {
   /// A unique key, based on the screenId. This key is used for [Page.key].
   final ValueKey<SCREEN_ID> pageKey;
 
-  /// The enum for this [RubigoScreen]
+  /// The unique identifier for this [RubigoScreen]
   final SCREEN_ID screenId;
 
   /// The widget that represents this screen.

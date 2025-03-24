@@ -3,7 +3,7 @@ import 'package:rubigo_router/rubigo_router.dart';
 
 /// Use this class to create a [RubigoRouterDelegate] or use it as a blue-print
 /// for your own [RouterDelegate].
-class RubigoRouterDelegate<SCREEN_ID extends Enum>
+class RubigoRouterDelegate<SCREEN_ID extends Object>
     extends RouterDelegate<SCREEN_ID>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   /// Creates a [RubigoRouterDelegate]

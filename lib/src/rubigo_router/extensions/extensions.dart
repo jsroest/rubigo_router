@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rubigo_router/rubigo_router.dart';
 
 /// A collection of extension methods on [ListOfRubigoScreens]
-extension ExtensionOnListOfRubigoScreens<SCREEN_ID extends Enum>
+extension ExtensionOnListOfRubigoScreens<SCREEN_ID extends Object>
     on ListOfRubigoScreens<SCREEN_ID> {
   /// Finds the first [RubigoScreen] in the list with this screenId.
   /// This function throws an error if the screen is not found.
@@ -18,7 +18,8 @@ extension ExtensionOnListOfRubigoScreens<SCREEN_ID extends Enum>
 }
 
 /// A collection of extension methods on list of [List<SCREEN_ID>].
-extension ExtensionOnListOfScreenId<SCREEN_ID extends Enum> on List<SCREEN_ID> {
+extension ExtensionOnListOfScreenId<SCREEN_ID extends Object>
+    on List<SCREEN_ID> {
   /// Check if there is at least one screen available below the current screen.
   /// This could be an appropriate check before calling [RubigoRouter.pop].
   bool hasScreenBelow() => length > 1;
@@ -41,7 +42,7 @@ extension ExtensionOnListOfScreenId<SCREEN_ID extends Enum> on List<SCREEN_ID> {
 
   /// Converts a list of screenId to a breadcrumbs String.
   /// S100→S200→S300
-  String breadCrumbs() => map((e) => e.name).join('→').toUpperCase();
+  String breadCrumbs() => map(getName).join('→').toUpperCase();
 }
 
 /// Extensions on [RubigoScreen]
@@ -60,7 +61,7 @@ extension ExtensionOnRubigoScreen on RubigoScreen {
 }
 
 /// Extensions on [RubigoRouter]
-extension ExtensionOnRubigoRouter<SCREEN_ID extends Enum>
+extension ExtensionOnRubigoRouter<SCREEN_ID extends Object>
     on RubigoRouter<SCREEN_ID> {
   /// Get the screenId of the current screen
   SCREEN_ID get currentScreenId => screens.last.screenId;

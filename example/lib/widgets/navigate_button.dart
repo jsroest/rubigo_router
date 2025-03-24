@@ -3,7 +3,7 @@ import 'package:rubigo_router/rubigo_router.dart';
 
 // A button that rebuilds on screen stack changes. On rebuild it determines with
 // the isEnabled functions if the button is enabled.
-class NavigateButton<SCREEN_ID extends Enum> extends StatelessWidget {
+class NavigateButton<SCREEN_ID extends Object> extends StatelessWidget {
   const NavigateButton({
     required this.rubigoRouter,
     required this.isEnabled,
@@ -13,7 +13,7 @@ class NavigateButton<SCREEN_ID extends Enum> extends StatelessWidget {
   });
 
   final RubigoRouter<SCREEN_ID> rubigoRouter;
-  final bool Function(List<Enum> screenStack) isEnabled;
+  final bool Function(List<Object> screenStack) isEnabled;
   final VoidCallback onPressed;
   final Widget child;
 

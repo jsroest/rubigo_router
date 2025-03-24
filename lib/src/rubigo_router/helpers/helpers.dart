@@ -20,3 +20,7 @@ bool currentRouteIsPage(RubigoRouter rubigoRouter) {
   );
   return isPage;
 }
+
+String getName(Object object) {
+  return object is Enum ? object.name : object.toString();
+}

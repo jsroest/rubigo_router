@@ -21,7 +21,7 @@ enum EventType {
 /// Used in [RubigoControllerMixin.onTop] and [RubigoControllerMixin.willShow].
 /// With this information the controller can decide what to do next.
 @immutable
-class RubigoChangeInfo<SCREEN_ID extends Enum> {
+class RubigoChangeInfo<SCREEN_ID extends Object> {
   /// Creates a [RubigoChangeInfo]
   const RubigoChangeInfo(
     this.eventType,

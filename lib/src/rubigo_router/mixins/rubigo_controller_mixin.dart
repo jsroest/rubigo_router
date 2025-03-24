@@ -2,7 +2,7 @@ import 'package:rubigo_router/rubigo_router.dart';
 
 /// Adds navigation events and easy access to the [RubigoRouter] to a
 /// controller.
-mixin RubigoControllerMixin<SCREEN_ID extends Enum> {
+mixin RubigoControllerMixin<SCREEN_ID extends Object> {
   /// Provides easy access to the [RubigoRouter] that is in charge of this
   /// controller.
   late RubigoRouter<SCREEN_ID> rubigoRouter;

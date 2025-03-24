@@ -6,7 +6,7 @@ import 'package:rubigo_router/rubigo_router.dart';
 /// A sample how to wire-up Flutter's [MaterialApp.router] with
 /// [RubigoRouterDelegate], a [RubigoRootBackButtonDispatcher] and a
 /// [RubigoBusyWidget].
-class RubigoMaterialApp<SCREEN_ID extends Enum> extends StatefulWidget {
+class RubigoMaterialApp<SCREEN_ID extends Object> extends StatefulWidget {
   /// Creates a [RubigoMaterialApp]
   const RubigoMaterialApp({
     required this.routerDelegate,
@@ -38,7 +38,7 @@ class RubigoMaterialApp<SCREEN_ID extends Enum> extends StatefulWidget {
       _RubigoMaterialAppState<SCREEN_ID>();
 }
 
-class _RubigoMaterialAppState<SCREEN_ID extends Enum>
+class _RubigoMaterialAppState<SCREEN_ID extends Object>
     extends State<RubigoMaterialApp<SCREEN_ID>> {
   @override
   void didChangeDependencies() {

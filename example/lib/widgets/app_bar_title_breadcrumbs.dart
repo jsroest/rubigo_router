@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rubigo_router/rubigo_router.dart';
 
 // This AppBar shows a title and the current screen stack as breadcrumbs.
-class AppBarTitleBreadCrumbs<SCREEN_ID extends Enum> extends StatelessWidget {
+class AppBarTitleBreadCrumbs<SCREEN_ID extends Object> extends StatelessWidget {
   const AppBarTitleBreadCrumbs({
     required this.title,
     required this.rubigoRouter,

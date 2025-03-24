@@ -60,7 +60,7 @@ import 'package:rubigo_router/src/rubigo_router/stack_manager/rubigo_stack_manag
 ///   );
 /// }
 /// ```
-class RubigoRouter<SCREEN_ID extends Enum> with ChangeNotifier {
+class RubigoRouter<SCREEN_ID extends Object> with ChangeNotifier {
   /// Creates a [RubigoRouter]
   RubigoRouter({
     required List<RubigoScreen<SCREEN_ID>> availableScreens,
@@ -107,7 +107,8 @@ class RubigoRouter<SCREEN_ID extends Enum> with ChangeNotifier {
     await _logNavigation('RubigoRouter.init() called.');
     final firstScreen = await initAndGetFirstScreen();
     await _logNavigation(
-      'RubigoRouter.init() ended. First screen will be ${firstScreen.name}.',
+      'RubigoRouter.init() ended. First screen will be '
+      '${getName(firstScreen)}.',
     );
     for (final screenSet in _availableScreens) {
 // Wire up the rubigoRouter in each controller, if it is a
@@ -220,8 +221,8 @@ class RubigoRouter<SCREEN_ID extends Enum> with ChangeNotifier {
       // valid.
       unawaited(
         _logNavigation(
-          'onDidRemovePage(${removedScreenId.name}) called. Last page is '
-          '${lastScreenId.name}, ignoring.',
+          'onDidRemovePage(${getName(removedScreenId)}) called. Last page is '
+          '${getName(lastScreenId)}, ignoring.',
         ),
       );
       return;
@@ -230,7 +231,7 @@ class RubigoRouter<SCREEN_ID extends Enum> with ChangeNotifier {
     // handle the back event.
     unawaited(
       _logNavigation(
-        'onDidRemovePage(${removedScreenId.name}) called.',
+        'onDidRemovePage(${getName(removedScreenId)}) called.',
       ),
     );
 
@@ -278,7 +279,7 @@ class RubigoRouter<SCREEN_ID extends Enum> with ChangeNotifier {
 
     final warningText = '''
 RubigoRouter warning.
-"onDidRemovePage called" for ${removedScreenId.name}, but the source was not a userGesture. 
+"onDidRemovePage called" for ${getName(removedScreenId)}, but the source was not a userGesture. 
 The cause is most likely that Navigator.maybePop(context) was (indirectly) called.
 This can happen when:
 - A regular BackButton was used to pop this page. Solution: Use a rubigoBackButton in the AppBar.
@@ -311,20 +312,20 @@ This can happen when:
 
   /// Pop directly to the screen with [screenId].
   Future<void> popTo(SCREEN_ID screenId) async {
-    await _logNavigation('popTo(${screenId.name}) called.');
+    await _logNavigation('popTo(${getName(screenId)}) called.');
     await busyService.busyWrapper(() => _rubigoStackManager.popTo(screenId));
   }
 
   /// Push screen with [screenId] on the stack.
   Future<void> push(SCREEN_ID screenId) async {
-    await _logNavigation('push(${screenId.name}) called.');
+    await _logNavigation('push(${getName(screenId)}) called.');
     await busyService.busyWrapper(() => _rubigoStackManager.push(screenId));
   }
 
   /// Replace the current screen stack with another screen stack.
   Future<void> replaceStack(List<SCREEN_ID> screens) async {
     await _logNavigation(
-      'replaceStack(${screens.map((e) => e.name).join('→')}) called.',
+      'replaceStack(${screens.map(getName).join('→')}) called.',
     );
     await busyService.busyWrapper(
       () => _rubigoStackManager.replaceStack(screens),
@@ -333,7 +334,7 @@ This can happen when:
 
   /// Remove the screen with [screenId] silently from the stack.
   Future<void> remove(SCREEN_ID screenId) async {
-    await _logNavigation('remove(${screenId.name}) called.');
+    await _logNavigation('remove(${getName(screenId)}) called.');
     await _rubigoStackManager.remove(screenId);
   }
 
@@ -384,7 +385,8 @@ This can happen when:
     },
     popTo: (SCREEN_ID screenId) async {
       if (busyService.isBusy) {
-        await _logNavigation('PopTo(${screenId.name}) was called by the user, '
+        await _logNavigation(
+            'PopTo(${getName(screenId)}) was called by the user, '
             'but the app is busy.');
         return;
       }
@@ -392,7 +394,8 @@ This can happen when:
     },
     push: (SCREEN_ID screenId) async {
       if (busyService.isBusy) {
-        await _logNavigation('Push(${screenId.name}) was called by the user, '
+        await _logNavigation(
+            'Push(${getName(screenId)}) was called by the user, '
             'but the app is busy.');
         return;
       }
@@ -409,7 +412,8 @@ This can happen when:
     },
     remove: (SCREEN_ID screenId) async {
       if (busyService.isBusy) {
-        await _logNavigation('remove(${screenId.name}) was called by the user, '
+        await _logNavigation(
+            'remove(${getName(screenId)}) was called by the user, '
             'but the app is busy.');
         return;
       }
@@ -421,7 +425,7 @@ This can happen when:
 
 /// This class groups ui navigation functions together.
 /// {@macro Ui}
-class Ui<SCREEN_ID extends Enum> {
+class Ui<SCREEN_ID extends Object> {
   /// Creates a [Ui] class
   Ui({
     required this.pop,

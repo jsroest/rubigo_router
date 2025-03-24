@@ -8,7 +8,7 @@ import 'package:rubigo_router/src/rubigo_router/stack_manager/navigation_events.
 /// This class manages the screen stack. It provides functions to manipulate the
 /// stack and it fires events like [RubigoControllerMixin.onTop] and
 /// [RubigoControllerMixin.willShow].
-class RubigoStackManager<SCREEN_ID extends Enum> with ChangeNotifier {
+class RubigoStackManager<SCREEN_ID extends Object> with ChangeNotifier {
   /// Creates a [RubigoStackManager]
   RubigoStackManager(
     this.screenStack,
@@ -171,8 +171,8 @@ class RubigoStackManager<SCREEN_ID extends Enum> with ChangeNotifier {
     // If not found, or the topmost one
     if (index == -1 || index == screenStack.length - 1) {
       final txt = 'Developer: With popTo, you tried to navigate to '
-          '${navigationEvent.screenId.name}, which was not below this screen '
-          'on the stack.';
+          '${getName(navigationEvent.screenId)}, which was not below this '
+          'screen on the stack.';
       await _logNavigation(txt);
       throw UnsupportedError(txt);
     }
@@ -222,7 +222,7 @@ class RubigoStackManager<SCREEN_ID extends Enum> with ChangeNotifier {
     );
     if (index == -1) {
       final txt = 'Developer: You can only remove screens that exist on the '
-          'stack (${navigationEvent.screenId.name} not found).';
+          'stack (${getName(navigationEvent.screenId)} not found).';
       await _logNavigation(txt);
       throw UnsupportedError(txt);
     }
@@ -241,7 +241,7 @@ class RubigoStackManager<SCREEN_ID extends Enum> with ChangeNotifier {
     _screens = [...screenStack];
     await _logNavigation(
       'Screens: '
-      '${screens.toListOfScreenId().map((e) => e.name).join('→')}.',
+      '${screens.toListOfScreenId().map(getName).join('→')}.',
     );
     notifyListeners();
     // Inform al controllers that were removed from the stack.

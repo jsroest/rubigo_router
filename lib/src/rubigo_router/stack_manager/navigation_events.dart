@@ -7,7 +7,7 @@ sealed class NavigationEvent<SCREEN_ID> {
 }
 
 /// Defines a Push event
-class Push<SCREEN_ID extends Enum> extends NavigationEvent<SCREEN_ID> {
+class Push<SCREEN_ID extends Object> extends NavigationEvent<SCREEN_ID> {
   /// Creates a [Push] object.
   Push(this.screenId);
 
@@ -16,13 +16,13 @@ class Push<SCREEN_ID extends Enum> extends NavigationEvent<SCREEN_ID> {
 }
 
 /// Defines a Pop event
-class Pop<SCREEN_ID extends Enum> extends NavigationEvent<SCREEN_ID> {
+class Pop<SCREEN_ID extends Object> extends NavigationEvent<SCREEN_ID> {
   /// Creates a Pop object.
   Pop();
 }
 
 /// Defines a PopTo event
-class PopTo<SCREEN_ID extends Enum> extends NavigationEvent<SCREEN_ID> {
+class PopTo<SCREEN_ID extends Object> extends NavigationEvent<SCREEN_ID> {
   /// Creates a [PopTo] object.
   PopTo(this.screenId);
 
@@ -31,7 +31,8 @@ class PopTo<SCREEN_ID extends Enum> extends NavigationEvent<SCREEN_ID> {
 }
 
 /// Defines a ReplaceStack event
-class ReplaceStack<SCREEN_ID extends Enum> extends NavigationEvent<SCREEN_ID> {
+class ReplaceStack<SCREEN_ID extends Object>
+    extends NavigationEvent<SCREEN_ID> {
   /// Creates a [ReplaceStack] object/
   ReplaceStack(this.screenStack);
 
@@ -40,7 +41,7 @@ class ReplaceStack<SCREEN_ID extends Enum> extends NavigationEvent<SCREEN_ID> {
 }
 
 /// Defines a Remove event
-class Remove<SCREEN_ID extends Enum> extends NavigationEvent<SCREEN_ID> {
+class Remove<SCREEN_ID extends Object> extends NavigationEvent<SCREEN_ID> {
   /// Creates a [Remove] object.
   Remove(this.screenId);
 
