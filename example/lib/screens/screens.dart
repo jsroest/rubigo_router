@@ -46,71 +46,113 @@ enum Screens {
 // A simple service locator to hold controllers.
 final holder = RubigoHolder();
 
-// All available screens are defined here.
-final ListOfRubigoScreens<Screens> availableScreens = [
-  RubigoScreen(
-    Screens.splashScreen,
-    SplashScreen(),
-    () => holder.getOrCreate(SplashController.new),
-  ),
-  RubigoScreen(
-    Screens.s110,
-    S110Screen(),
-    () => holder.getOrCreate(S110Controller.new),
-  ),
-  RubigoScreen(
-    Screens.s120,
-    S120Screen(),
-    () => holder.getOrCreate(S120Controller.new),
-  ),
-  RubigoScreen(
-    Screens.s130,
-    S130Screen(),
-    () => holder.getOrCreate(S130Controller.new),
-  ),
-  RubigoScreen(
-    Screens.s140,
-    const S140Screen(),
-    () => holder.getOrCreate(S140Controller.new),
-  ),
-  RubigoScreen(
-    Screens.s210,
-    S210Screen(),
-    () => holder.getOrCreate(S210Controller.new),
-  ),
-  RubigoScreen(
-    Screens.s220,
-    S220Screen(),
-    () => holder.getOrCreate(S220Controller.new),
-  ),
-  RubigoScreen(
-    Screens.s230,
-    S230Screen(),
-    () => holder.getOrCreate(S230Controller.new),
-  ),
-  RubigoScreen(
-    Screens.s240,
-    const S240Screen(),
-    () => holder.getOrCreate(S240Controller.new),
-  ),
-  RubigoScreen(
-    Screens.s310,
-    S310Screen(),
-    () => holder.getOrCreate(S310Controller.new),
-  ),
-  RubigoScreen(
-    Screens.s320,
-    S320Screen(),
-    () => holder.getOrCreate(S320Controller.new),
-  ),
-  RubigoScreen(
-    Screens.s330,
-    S330Screen(),
-    () => holder.getOrCreate(S330Controller.new),
-  ),
-  RubigoScreen(
-    Screens.s340,
-    const S340Screen(),
-    () => holder.getOrCreate(S340Controller.new),
-  ),
-];
+RubigoScreen<Screens> getRubigoScreen(
+  Screens screenId,
+) {
+  switch (screenId) {
+    case Screens.splashScreen:
+      return RubigoScreen(
+        screenId: screenId,
+        getScreenWidget: SplashScreen.new,
+        getController: () =>
+            holder.getOrCreate<SplashController>(SplashController.new),
+        getRubigoRouter: holder.get<RubigoRouter<Screens>>,
+      );
+    case Screens.s110:
+      return RubigoScreen(
+        screenId: screenId,
+        getScreenWidget: S110Screen.new,
+        getController: () =>
+            holder.getOrCreate<S110Controller>(S110Controller.new),
+        getRubigoRouter: holder.get<RubigoRouter<Screens>>,
+      );
+    case Screens.s120:
+      return RubigoScreen(
+        screenId: screenId,
+        getScreenWidget: S120Screen.new,
+        getController: () =>
+            holder.getOrCreate<S120Controller>(S120Controller.new),
+        getRubigoRouter: holder.get<RubigoRouter<Screens>>,
+      );
+    case Screens.s130:
+      return RubigoScreen(
+        screenId: screenId,
+        getScreenWidget: S130Screen.new,
+        getController: () =>
+            holder.getOrCreate<S130Controller>(S130Controller.new),
+        getRubigoRouter: holder.get<RubigoRouter<Screens>>,
+      );
+    case Screens.s140:
+      return RubigoScreen(
+        screenId: screenId,
+        getScreenWidget: S140Screen.new,
+        getController: () =>
+            holder.getOrCreate<S140Controller>(S140Controller.new),
+        getRubigoRouter: holder.get<RubigoRouter<Screens>>,
+      );
+    case Screens.s210:
+      return RubigoScreen(
+        screenId: screenId,
+        getScreenWidget: S210Screen.new,
+        getController: () =>
+            holder.getOrCreate<S210Controller>(S210Controller.new),
+        getRubigoRouter: holder.get<RubigoRouter<Screens>>,
+      );
+    case Screens.s220:
+      return RubigoScreen(
+        screenId: screenId,
+        getScreenWidget: S220Screen.new,
+        getController: () =>
+            holder.getOrCreate<S220Controller>(S220Controller.new),
+        getRubigoRouter: holder.get<RubigoRouter<Screens>>,
+      );
+    case Screens.s230:
+      return RubigoScreen(
+        screenId: screenId,
+        getScreenWidget: S230Screen.new,
+        getController: () =>
+            holder.getOrCreate<S230Controller>(S230Controller.new),
+        getRubigoRouter: holder.get<RubigoRouter<Screens>>,
+      );
+    case Screens.s240:
+      return RubigoScreen(
+        screenId: screenId,
+        getScreenWidget: S240Screen.new,
+        getController: () =>
+            holder.getOrCreate<S240Controller>(S240Controller.new),
+        getRubigoRouter: holder.get<RubigoRouter<Screens>>,
+      );
+    case Screens.s310:
+      return RubigoScreen(
+        screenId: screenId,
+        getScreenWidget: S310Screen.new,
+        getController: () =>
+            holder.getOrCreate<S310Controller>(S310Controller.new),
+        getRubigoRouter: holder.get<RubigoRouter<Screens>>,
+      );
+    case Screens.s320:
+      return RubigoScreen(
+        screenId: screenId,
+        getScreenWidget: S320Screen.new,
+        getController: () =>
+            holder.getOrCreate<S320Controller>(S320Controller.new),
+        getRubigoRouter: holder.get<RubigoRouter<Screens>>,
+      );
+    case Screens.s330:
+      return RubigoScreen(
+        screenId: screenId,
+        getScreenWidget: S330Screen.new,
+        getController: () =>
+            holder.getOrCreate<S330Controller>(S330Controller.new),
+        getRubigoRouter: holder.get<RubigoRouter<Screens>>,
+      );
+    case Screens.s340:
+      return RubigoScreen(
+        screenId: screenId,
+        getScreenWidget: S340Screen.new,
+        getController: () =>
+            holder.getOrCreate<S340Controller>(S340Controller.new),
+        getRubigoRouter: holder.get<RubigoRouter<Screens>>,
+      );
+  }
+}

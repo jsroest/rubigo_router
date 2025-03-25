@@ -20,17 +20,17 @@ void main() {
         RubigoScreen(
           _Screens.s100,
           _S100Screen(),
-          () => holder.getOrCreate(_S100Controller.new),
+          () => holder.getOrCreate<_S100Controller>(_S100Controller.new),
         ),
         RubigoScreen(
           _Screens.s200,
           _S200Screen(),
-          () => holder.getOrCreate(_S100Controller.new),
+          () => holder.getOrCreate<_S200Controller>(_S200Controller.new),
         ),
         RubigoScreen(
           _Screens.s300,
           _S300Screen(),
-          () => holder.getOrCreate(_S300Controller.new),
+          () => holder.getOrCreate<_S300Controller>(_S300Controller.new),
         ),
       ];
 
@@ -47,17 +47,17 @@ void main() {
         RubigoScreen(
           _Screens.s100,
           _S100Screen(),
-          () => holder.getOrCreate(_S100Controller.new),
+          () => holder.getOrCreate<_S100Controller>(_S100Controller.new),
         ),
         RubigoScreen(
           _Screens.s200,
           _S200Screen(),
-          () => holder.getOrCreate(_S100Controller.new),
+          () => holder.getOrCreate<_S200Controller>(_S200Controller.new),
         ),
         RubigoScreen(
           _Screens.s300,
           _S300Screen(),
-          () => holder.getOrCreate(_S300Controller.new),
+          () => holder.getOrCreate<_S300Controller>(_S300Controller.new),
         ),
       ];
       final listOfScreenId = availableScreens.toListOfScreenId();
@@ -74,17 +74,17 @@ void main() {
         RubigoScreen(
           _Screens.s100,
           _S100Screen(),
-          () => holder.getOrCreate(_S100Controller.new),
+          () => holder.getOrCreate<_S100Controller>(_S100Controller.new),
         ),
         RubigoScreen(
           _Screens.s200,
           _S200Screen(),
-          () => holder.getOrCreate(_S100Controller.new),
+          () => holder.getOrCreate<_S200Controller>(_S200Controller.new),
         ),
         RubigoScreen(
           _Screens.s300,
           _S300Screen(),
-          () => holder.getOrCreate(_S300Controller.new),
+          () => holder.getOrCreate<_S300Controller>(_S300Controller.new),
         ),
       ];
       final listOfWidget = availableScreens.toListOfWidget();
@@ -129,17 +129,17 @@ void main() {
         RubigoScreen(
           _Screens.s100,
           _S100Screen(),
-          () => holder.getOrCreate(_S100Controller.new),
+          () => holder.getOrCreate<_S100Controller>(_S100Controller.new),
         ),
         RubigoScreen(
           _Screens.s200,
           _S200Screen(),
-          () => holder.getOrCreate(_S100Controller.new),
+          () => holder.getOrCreate<_S200Controller>(_S200Controller.new),
         ),
         RubigoScreen(
           _Screens.s300,
           _S300Screen(),
-          () => holder.getOrCreate(_S300Controller.new),
+          () => holder.getOrCreate<_S300Controller>(_S300Controller.new),
         ),
       ];
       final list1 = [
@@ -167,7 +167,7 @@ void main() {
       final s100 = RubigoScreen(
         _Screens.s100,
         Container(),
-        () => holder.getOrCreate(_S100Controller.new),
+        () => holder.getOrCreate<_S100Controller>(_S100Controller.new),
       );
       final materialPage = s100.toMaterialPage();
       expect(materialPage.key, s100.pageKey);
@@ -181,7 +181,7 @@ void main() {
       final s100 = RubigoScreen(
         _Screens.s100,
         Container(),
-        () => holder.getOrCreate(_S100Controller.new),
+        () => holder.getOrCreate<_S100Controller>(_S100Controller.new),
       );
       final cupertinoPage = s100.toCupertinoPage();
       expect(cupertinoPage.key, s100.pageKey);
@@ -196,21 +196,21 @@ void main() {
         RubigoScreen(
           _Screens.s100,
           _S100Screen(),
-          () => holder.getOrCreate(_S100Controller.new),
+          () => holder.getOrCreate<_S100Controller>(_S100Controller.new),
         ),
         RubigoScreen(
           _Screens.s200,
           _S200Screen(),
-          () => holder.getOrCreate(_S100Controller.new),
+          () => holder.getOrCreate<_S200Controller>(_S200Controller.new),
         ),
         RubigoScreen(
           _Screens.s300,
           _S300Screen(),
-          () => holder.getOrCreate(_S300Controller.new),
+          () => holder.getOrCreate<_S300Controller>(_S300Controller.new),
         ),
       ];
       final rubigoRouter = RubigoRouter(
-        availableScreens: availableScreens,
+        getRubigoScreen: availableScreens,
         splashScreenId: _Screens.s100,
       );
       expect(rubigoRouter.currentScreenId, _Screens.s100);

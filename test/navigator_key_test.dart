@@ -5,30 +5,41 @@ import 'package:rubigo_router/rubigo_router.dart';
 import 'mock_controller/mock_controller.dart';
 
 void main() {
+  late RubigoRouter<_Screens> rubigoRouter;
   final holder = RubigoHolder();
   final key = GlobalKey<NavigatorState>();
+
+  RubigoScreen<_Screens> getRubigoScreen(_Screens screenId) {
+    switch (screenId) {
+      case _Screens.splashScreen:
+        return RubigoScreen(
+          screenId: _Screens.splashScreen,
+          getScreenWidget: _SplashScreen.new,
+          getController: () =>
+              holder.getOrCreate<_SplashController>(_SplashController.new),
+          getRubigoRouter: () => rubigoRouter,
+        );
+      case _Screens.s100:
+        return RubigoScreen(
+          screenId: _Screens.s100,
+          getScreenWidget: _S100Screen.new,
+          getController: () =>
+              holder.getOrCreate<_S100Controller>(_S100Controller.new),
+          getRubigoRouter: () => rubigoRouter,
+        );
+    }
+  }
 
   test(
     'Navigator key passed',
     () {
-      final rubigoNavigator = RubigoRouter<_Screens>(
-        availableScreens: [
-          RubigoScreen(
-            _Screens.splashScreen,
-            const _SplashScreen(),
-            () => holder.getOrCreate(_SplashController.new),
-          ),
-          RubigoScreen(
-            _Screens.s100,
-            _S100Screen(),
-            () => holder.getOrCreate(_S100Controller.new),
-          ),
-        ],
+      rubigoRouter = RubigoRouter<_Screens>(
+        getRubigoScreen: getRubigoScreen,
         navigatorKey: key,
         splashScreenId: _Screens.splashScreen,
       );
       expect(
-        identical(rubigoNavigator.navigatorKey, key),
+        identical(rubigoRouter.navigatorKey, key),
         true,
       );
     },
@@ -37,23 +48,12 @@ void main() {
   test(
     'Navigator key not passed',
     () {
-      final rubigoNavigator = RubigoRouter<_Screens>(
-        availableScreens: [
-          RubigoScreen(
-            _Screens.splashScreen,
-            const _SplashScreen(),
-            () => holder.getOrCreate(_SplashController.new),
-          ),
-          RubigoScreen(
-            _Screens.s100,
-            _S100Screen(),
-            () => holder.getOrCreate(_S100Controller.new),
-          ),
-        ],
+      rubigoRouter = RubigoRouter<_Screens>(
+        getRubigoScreen: getRubigoScreen,
         splashScreenId: _Screens.splashScreen,
       );
       expect(
-        identical(rubigoNavigator.navigatorKey, key),
+        identical(rubigoRouter.navigatorKey, key),
         false,
       );
     },

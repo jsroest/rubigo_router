@@ -5,39 +5,60 @@ import 'package:rubigo_router/rubigo_router.dart';
 import 'mock_controller/callbacks.dart';
 import 'mock_controller/mock_controller.dart';
 
+enum _Screens {
+  splashScreen,
+  s100,
+  s200,
+  s300,
+}
+
 void main() {
-  TestWidgetsFlutterBinding.ensureInitialized();
   late RubigoHolder holder;
-  late List<RubigoScreen<_Screens>> availableScreens;
   late RubigoRouter<_Screens> rubigoRouter;
-  //Use the _defaultLogNavigation here
 
   setUp(() {
     holder = RubigoHolder();
-    availableScreens = [
-      RubigoScreen(
-        _Screens.splashScreen,
-        const _SplashScreen(),
-        () => holder.getOrCreate(_SplashController.new),
-      ),
-      RubigoScreen(
-        _Screens.s100,
-        _S100Screen(),
-        () => holder.getOrCreate(_S100Controller.new),
-      ),
-      RubigoScreen(
-        _Screens.s200,
-        _S200Screen(),
-        () => holder.getOrCreate(_S200Controller.new),
-      ),
-      RubigoScreen(
-        _Screens.s300,
-        _S300Screen(),
-        () => holder.getOrCreate(_S300Controller.new),
-      ),
-    ];
+    RubigoScreen<_Screens> getRubigoScreen(
+      _Screens screenId,
+    ) {
+      switch (screenId) {
+        case _Screens.splashScreen:
+          return RubigoScreen(
+            screenId: _Screens.splashScreen,
+            getScreenWidget: _SplashScreen.new,
+            getController: () =>
+                holder.getOrCreate<_SplashController>(_SplashController.new),
+            getRubigoRouter: () => rubigoRouter,
+          );
+        case _Screens.s100:
+          return RubigoScreen(
+            screenId: _Screens.s100,
+            getScreenWidget: _S100Screen.new,
+            getController: () =>
+                holder.getOrCreate<_S100Controller>(_S100Controller.new),
+            getRubigoRouter: () => rubigoRouter,
+          );
+        case _Screens.s200:
+          return RubigoScreen(
+            screenId: _Screens.s200,
+            getScreenWidget: _S200Screen.new,
+            getController: () =>
+                holder.getOrCreate<_S200Controller>(_S200Controller.new),
+            getRubigoRouter: () => rubigoRouter,
+          );
+        case _Screens.s300:
+          return RubigoScreen(
+            screenId: _Screens.s300,
+            getScreenWidget: _S300Screen.new,
+            getController: () =>
+                holder.getOrCreate<_S300Controller>(_S300Controller.new),
+            getRubigoRouter: () => rubigoRouter,
+          );
+      }
+    }
+
     rubigoRouter = RubigoRouter(
-      availableScreens: availableScreens,
+      getRubigoScreen: getRubigoScreen,
       splashScreenId: _Screens.splashScreen,
     );
   });
@@ -81,16 +102,9 @@ void main() {
   );
 }
 
-enum _Screens {
-  splashScreen,
-  s100,
-  s200,
-  s300,
-}
-
 //region SplashScreen
 class _SplashScreen extends StatelessWidget {
-  //ignore: unused_element
+//ignore: unused_element
   const _SplashScreen({super.key});
 
   @override
@@ -105,7 +119,7 @@ class _SplashController extends MockController<_Screens> {}
 //region S100Screen
 class _S100Screen extends StatelessWidget
     with RubigoScreenMixin<_S100Controller> {
-  //ignore: unused_element
+//ignore: unused_element
   _S100Screen({super.key});
 
   @override
@@ -125,7 +139,7 @@ class _S100Controller extends MockController<_Screens> {}
 //region S200Screen
 class _S200Screen extends StatelessWidget
     with RubigoScreenMixin<_S200Controller> {
-  //ignore: unused_element
+//ignore: unused_element
   _S200Screen({super.key});
 
   @override
@@ -145,7 +159,7 @@ class _S200Controller extends MockController<_Screens> {}
 //region S300Screen
 class _S300Screen extends StatelessWidget
     with RubigoScreenMixin<_S300Controller> {
-  //ignore: unused_element
+//ignore: unused_element
   _S300Screen({super.key});
 
   @override

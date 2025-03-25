@@ -5,40 +5,68 @@ import 'package:rubigo_router/rubigo_router.dart';
 import 'mock_controller/callbacks.dart';
 import 'mock_controller/mock_controller.dart';
 
+enum _Screens {
+  splashScreen,
+  s100LoginScreen,
+  s200HomeScreen,
+  s300GiveLocation,
+}
+
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late RubigoHolder holder;
-  late List<RubigoScreen<_Screens>> availableScreens;
   late RubigoRouter<_Screens> rubigoRouter;
   final logNavigation = <String>[];
 
   setUp(() async {
     logNavigation.clear();
     holder = RubigoHolder();
-    availableScreens = [
-      RubigoScreen(
-        _Screens.splashScreen,
-        const _SplashScreen(),
-        () => holder.getOrCreate(_SplashController.new),
-      ),
-      RubigoScreen(
-        _Screens.s100LoginScreen,
-        _S100LoginScreen(),
-        () => holder.getOrCreate(_S100LoginController.new),
-      ),
-      RubigoScreen(
-        _Screens.s200HomeScreen,
-        _S200HomeScreen(),
-        () => holder.getOrCreate(_S200HomeController.new),
-      ),
-      RubigoScreen(
-        _Screens.s300GiveLocation,
-        _S300GiveLocationScreen(),
-        () => holder.getOrCreate(_S300GiveLocationController.new),
-      ),
-    ];
+    holder.getOrCreate<_SplashController>(_SplashController.new);
+    holder.getOrCreate<_S100LoginController>(_S100LoginController.new);
+    holder.getOrCreate<_S200HomeController>(_S200HomeController.new);
+    holder.getOrCreate<_S300GiveLocationController>(
+      _S300GiveLocationController.new,
+    );
+    RubigoScreen<_Screens> getRubigoScreen(_Screens screenId) {
+      switch (screenId) {
+        case _Screens.splashScreen:
+          return RubigoScreen(
+            screenId: _Screens.splashScreen,
+            getScreenWidget: _SplashScreen.new,
+            getController: () =>
+                holder.getOrCreate<_SplashController>(_SplashController.new),
+            getRubigoRouter: () => rubigoRouter,
+          );
+        case _Screens.s100LoginScreen:
+          return RubigoScreen(
+            screenId: _Screens.s100LoginScreen,
+            getScreenWidget: _S100LoginScreen.new,
+            getController: () => holder
+                .getOrCreate<_S100LoginController>(_S100LoginController.new),
+            getRubigoRouter: () => rubigoRouter,
+          );
+        case _Screens.s200HomeScreen:
+          return RubigoScreen(
+            screenId: _Screens.s200HomeScreen,
+            getScreenWidget: _S200HomeScreen.new,
+            getController: () => holder
+                .getOrCreate<_S200HomeController>(_S200HomeController.new),
+            getRubigoRouter: () => rubigoRouter,
+          );
+        case _Screens.s300GiveLocation:
+          return RubigoScreen(
+            screenId: _Screens.s300GiveLocation,
+            getScreenWidget: _S300GiveLocationScreen.new,
+            getController: () =>
+                holder.getOrCreate<_S300GiveLocationController>(
+                    _S300GiveLocationController.new),
+            getRubigoRouter: () => rubigoRouter,
+          );
+      }
+    }
+
     rubigoRouter = RubigoRouter(
-      availableScreens: availableScreens,
+      getRubigoScreen: getRubigoScreen,
       splashScreenId: _Screens.splashScreen,
       logNavigation: (message) async => logNavigation.add(message),
     );
@@ -293,13 +321,6 @@ void main() {
       );
     },
   );
-}
-
-enum _Screens {
-  splashScreen,
-  s100LoginScreen,
-  s200HomeScreen,
-  s300GiveLocation,
 }
 
 //region SplashScreen

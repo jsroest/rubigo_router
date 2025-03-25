@@ -10,11 +10,11 @@ extension ExtensionOnListOfRubigoScreens<SCREEN_ID extends Object>
   RubigoScreen<SCREEN_ID> find(SCREEN_ID screenId) =>
       firstWhere((e) => e.screenId == screenId);
 
-  /// Converts this list to a list of ScreenIdl
+  /// Converts this list to a list of ScreenId
   List<SCREEN_ID> toListOfScreenId() => map((e) => e.screenId).toList();
 
   /// Converts this list to a list of screenWidgets
-  List<Widget> toListOfWidget() => map((e) => e.screenWidget).toList();
+  List<Widget> toListOfWidget() => map((e) => e.getScreenWidget()).toList();
 }
 
 /// A collection of extension methods on list of [List<SCREEN_ID>].
@@ -36,9 +36,9 @@ extension ExtensionOnListOfScreenId<SCREEN_ID extends Object>
 
   /// Converts a list of screenId to a list of RubigoScreen
   List<RubigoScreen<SCREEN_ID>> toListOfRubigoScreen(
-    ListOfRubigoScreens<SCREEN_ID> availableScreens,
+    GetRubigoScreen<SCREEN_ID> getRubigoScreen,
   ) =>
-      map((screenId) => availableScreens.find(screenId)).toList();
+      map((screenId) => getRubigoScreen(screenId)).toList();
 
   /// Converts a list of screenId to a breadcrumbs String.
   /// S100→S200→S300
@@ -50,13 +50,13 @@ extension ExtensionOnRubigoScreen on RubigoScreen {
   /// Converts a [RubigoScreen] to a [MaterialPage]
   MaterialPage<void> toMaterialPage() => MaterialPage(
         key: pageKey,
-        child: screenWidget,
+        child: getScreenWidget(),
       );
 
   /// Converts a [RubigoScreen] to a [CupertinoPage]
   CupertinoPage<void> toCupertinoPage() => CupertinoPage(
         key: pageKey,
-        child: screenWidget,
+        child: getScreenWidget(),
       );
 }
 

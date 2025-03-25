@@ -1,6 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:rubigo_router/rubigo_router.dart';
 
+enum _Screens {
+  s100,
+  s200,
+  s300,
+}
+
 void main() {
   final screenStacks = [
     <_Screens>[],
@@ -36,10 +42,4 @@ void main() {
       }
     },
   );
-}
-
-enum _Screens {
-  s100,
-  s200,
-  s300,
 }

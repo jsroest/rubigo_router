@@ -8,7 +8,7 @@ void main() {
   // Create a RubigoRouter for the set of screens defined by the Screens enum.
   // Pass it all available screens and the one to use as a splash screen.
   final rubigoRouter = RubigoRouter<Screens>(
-    availableScreens: availableScreens,
+    getRubigoScreen: getRubigoScreen,
     splashScreenId: Screens.splashScreen,
   );
 

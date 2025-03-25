@@ -62,37 +62,44 @@ import 'package:rubigo_router/src/rubigo_router/stack_manager/rubigo_stack_manag
 /// ```
 class RubigoRouter<SCREEN_ID extends Object> with ChangeNotifier {
   /// Creates a [RubigoRouter]
-  RubigoRouter({
-    required List<RubigoScreen<SCREEN_ID>> availableScreens,
+  factory RubigoRouter({
+    required GetRubigoScreen<SCREEN_ID> getRubigoScreen,
     required SCREEN_ID splashScreenId,
     RubigoBusyService? rubigoBusyService,
     LogNavigation? logNavigation,
     RubigoStackManager<SCREEN_ID>? rubigoStackManager,
     Future<void> Function()? onLastPagePopped,
     GlobalKey<NavigatorState>? navigatorKey,
-  })  : _availableScreens = availableScreens,
+  }) {
+    final stackManager = rubigoStackManager ??
+        RubigoStackManager(
+          [splashScreenId],
+          getRubigoScreen,
+          logNavigation ?? _defaultLogNavigation,
+        );
+    return RubigoRouter._(
+      getRubigoScreen: getRubigoScreen,
+      rubigoBusyService: rubigoBusyService ?? RubigoBusyService(),
+      logNavigation: logNavigation ?? _defaultLogNavigation,
+      rubigoStackManager: stackManager,
+      onLastPagePopped: onLastPagePopped ?? _defaultOnLastPagePopped,
+      navigatorKey: navigatorKey ?? GlobalKey<NavigatorState>(),
+    );
+  }
 
-        /// If a busyService was not given, use a default implementation
-        _busyService = rubigoBusyService ?? RubigoBusyService(),
-
-        /// If a logNavigation function was not given, use a default
-        /// implementation
-        _logNavigation = logNavigation ?? _defaultLogNavigation,
-
-        /// If a rubigoStackManager was not given, create one ourselves.
-        _rubigoStackManager = rubigoStackManager ??
-            RubigoStackManager(
-              [availableScreens.find(splashScreenId)],
-              availableScreens,
-              logNavigation ?? _defaultLogNavigation,
-            ),
-
-        /// If a onLastPagePopped function was not given use a default
-        /// implementation
-        _onLastPagePopped = onLastPagePopped ?? _defaultOnLastPagePopped,
-
-        /// If a navigatorKey was not given, create a default one.
-        _navigatorKey = navigatorKey ?? GlobalKey<NavigatorState>() {
+  RubigoRouter._({
+    required GetRubigoScreen<SCREEN_ID> getRubigoScreen,
+    required RubigoBusyService rubigoBusyService,
+    required LogNavigation logNavigation,
+    required RubigoStackManager<SCREEN_ID> rubigoStackManager,
+    required Future<void> Function() onLastPagePopped,
+    required GlobalKey<NavigatorState> navigatorKey,
+  })  : _getRubigoScreen = getRubigoScreen,
+        _busyService = rubigoBusyService,
+        _logNavigation = logNavigation,
+        _onLastPagePopped = onLastPagePopped,
+        _navigatorKey = navigatorKey,
+        _rubigoStackManager = rubigoStackManager {
     ///Listen to updates and notify our listener, the RouterDelegate
     _rubigoStackManager.addListener(notifyListeners);
   }
@@ -110,19 +117,6 @@ class RubigoRouter<SCREEN_ID extends Object> with ChangeNotifier {
       'RubigoRouter.init() ended. First screen will be '
       '${getName(firstScreen)}.',
     );
-    for (final screenSet in _availableScreens) {
-// Wire up the rubigoRouter in each controller, if it is a
-// RubigoControllerMixin
-      final controller = screenSet.getController();
-      if (controller is RubigoControllerMixin<SCREEN_ID>) {
-        controller.rubigoRouter = this;
-      }
-// Wire up the controller in each screenWidget that is a RubigoScreenMixin
-      if (screenSet.screenWidget is RubigoScreenMixin) {
-        final screenWidget = screenSet.screenWidget as RubigoScreenMixin;
-        screenWidget.controller = controller;
-      }
-    }
     _isInitialized = true;
     await replaceStack([firstScreen]);
   }
@@ -166,13 +160,13 @@ class RubigoRouter<SCREEN_ID extends Object> with ChangeNotifier {
 
   //region Private
 
-  final ListOfRubigoScreens<SCREEN_ID> _availableScreens;
+  final GetRubigoScreen<SCREEN_ID> _getRubigoScreen;
 
   final RubigoBusyService _busyService;
 
   final LogNavigation _logNavigation;
 
-  final RubigoStackManager<SCREEN_ID> _rubigoStackManager;
+  late final RubigoStackManager<SCREEN_ID> _rubigoStackManager;
 
   final Future<void> Function() _onLastPagePopped;
 
@@ -192,7 +186,8 @@ class RubigoRouter<SCREEN_ID extends Object> with ChangeNotifier {
   /// [Page] object.
   /// When this object calls [notifyListeners], the [Navigator] rebuilds and
   /// gets a fresh list of pages from this router.
-  ListOfRubigoScreens<SCREEN_ID> get screens => _rubigoStackManager.screens;
+  ListOfRubigoScreens<SCREEN_ID> get screens =>
+      _rubigoStackManager.screens.map(_getRubigoScreen).toList();
 
   /// Pass this property to [Navigator.onDidRemovePage].
   void onDidRemovePage(Page<Object?> page) {
@@ -212,7 +207,7 @@ class RubigoRouter<SCREEN_ID extends Object> with ChangeNotifier {
       throw UnsupportedError(txt);
     }
     final removedScreenId = pageKey.value;
-    final lastScreenId = _rubigoStackManager.screens.last.screenId;
+    final lastScreenId = _rubigoStackManager.screens.last;
     if (removedScreenId != lastScreenId) {
       // With this new event, we also receive this event when pages are removed
       // programmatically from the stack. Here onDidRemovePage was (probably)
@@ -362,9 +357,9 @@ This can happen when:
           // We have to ask the page if we may pop.
           final bool mayPop;
           // Get the page to pop from the stack.
-          final screenId = _rubigoStackManager.screenStack.last.screenId;
+          final screenId = _rubigoStackManager.screenStack.last;
           // Find the controller
-          final controller = _availableScreens.find(screenId).getController();
+          final controller = _getRubigoScreen(screenId).getController();
           if (controller is RubigoControllerMixin<SCREEN_ID>) {
             // If the controller implements RubigoControllerMixin, call mayPop.
             await _logNavigation('Call mayPop().');

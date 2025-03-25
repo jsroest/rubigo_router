@@ -23,21 +23,23 @@ void main() {
         RubigoScreen(
           _Screens.splashScreen,
           const _SplashScreen(),
-          () => holder.getOrCreate(_SplashController.new),
+          () => holder.getOrCreate<_SplashController>(_SplashController.new),
         ),
         RubigoScreen(
           _Screens.s100LoginScreen,
           _S100LoginScreen(),
-          () => holder.getOrCreate(_S100LoginController.new),
+          () => holder
+              .getOrCreate<_S100LoginController>(_S100LoginController.new),
         ),
         RubigoScreen(
           _Screens.s200HomeScreen,
           _S200HomeScreen(),
-          () => holder.getOrCreate(_S200HomeController.new),
+          () =>
+              holder.getOrCreate<_S200HomeController>(_S200HomeController.new),
         ),
       ];
       rubigoRouter = RubigoRouter(
-        availableScreens: availableScreens,
+        getRubigoScreen: availableScreens,
         splashScreenId: _Screens.splashScreen,
         logNavigation: (message) async => logNavigation.add(message),
       );

@@ -12,29 +12,29 @@ class RubigoStackManager<SCREEN_ID extends Object> with ChangeNotifier {
   /// Creates a [RubigoStackManager]
   RubigoStackManager(
     this.screenStack,
-    this._availableScreens,
+    this._getRubigoScreen,
     this._logNavigation,
   ) : _screens = [...screenStack];
 
   /// This is the actual screen stack, which can have other contents than
   /// [screens] when the app is busy navigating and the stack is not stable yet.
-  ListOfRubigoScreens<SCREEN_ID> screenStack;
+  List<SCREEN_ID> screenStack;
 
   // This is a function that can be called after navigation has taken place.
   PostNavigationCallback? _postNavigationCallback;
 
   // This is a list of all available screens.
-  final ListOfRubigoScreens<SCREEN_ID> _availableScreens;
+  final GetRubigoScreen<SCREEN_ID> _getRubigoScreen;
 
   // This function is called for logging purposes.
   final LogNavigation _logNavigation;
 
   // The backing variable for screens
-  ListOfRubigoScreens<SCREEN_ID> _screens;
+  List<SCREEN_ID> _screens;
 
   /// The current stable version of the screen stack. It is only updated
   /// when navigation is complete.
-  ListOfRubigoScreens<SCREEN_ID> get screens => _screens;
+  List<SCREEN_ID> get screens => _screens;
 
   /// Pops a screen from the stack. This call can generate more navigation
   /// calls.
@@ -60,7 +60,7 @@ class RubigoStackManager<SCREEN_ID extends Object> with ChangeNotifier {
   /// Returns true if the app is currently navigating.
   bool get isNavigating => _isNavigating;
 
-  //region _navigate
+  //region _private
   bool _isNavigating = false;
   bool _inWillShow = false;
   bool _inRemovedFromStack = false;
@@ -103,7 +103,7 @@ class RubigoStackManager<SCREEN_ID extends Object> with ChangeNotifier {
       // been called in the last onTop event.
       final tmpChangeInfo = _changeInfo;
       if (tmpChangeInfo != null) {
-        final controller = screenStack.last.getController();
+        final controller = _getRubigoScreen(screenStack.last).getController();
         if (controller is RubigoControllerMixin) {
           _inWillShow = true;
           await controller.willShow(tmpChangeInfo);
@@ -123,14 +123,13 @@ class RubigoStackManager<SCREEN_ID extends Object> with ChangeNotifier {
   Future<RubigoChangeInfo<SCREEN_ID>> _push(
     Push<SCREEN_ID> navigationEvent,
   ) async {
-    final previousScreen = screenStack.last;
-    final newScreen = _availableScreens.find(navigationEvent.screenId);
-    screenStack.add(newScreen);
-    final controller = newScreen.getController();
+    final previousScreenId = screenStack.last;
+    screenStack.add(navigationEvent.screenId);
+    final controller = _getRubigoScreen(screenStack.last).getController();
     final changeInfo = RubigoChangeInfo<SCREEN_ID>(
       EventType.push,
-      previousScreen.screenId,
-      screenStack.toListOfScreenId(),
+      previousScreenId,
+      screenStack,
     );
     if (controller is RubigoControllerMixin) {
       _eventCounter++;
@@ -144,14 +143,13 @@ class RubigoStackManager<SCREEN_ID extends Object> with ChangeNotifier {
     if (screenStack.length < 2) {
       throw LastPagePoppedException('The last page is popped.');
     }
-    final previousScreen = screenStack.last;
+    final previousScreenId = screenStack.last;
     screenStack.removeLast();
-    final newScreen = screenStack.last;
-    final controller = newScreen.getController();
+    final controller = _getRubigoScreen(screenStack.last).getController();
     final changeInfo = RubigoChangeInfo(
       EventType.pop,
-      previousScreen.screenId,
-      screenStack.toListOfScreenId(),
+      previousScreenId,
+      screenStack,
     );
     if (controller is RubigoControllerMixin) {
       _eventCounter++;
@@ -164,9 +162,9 @@ class RubigoStackManager<SCREEN_ID extends Object> with ChangeNotifier {
   Future<RubigoChangeInfo<SCREEN_ID>> _popTo(
     PopTo<SCREEN_ID> navigationEvent,
   ) async {
-    final previousScreen = screenStack.last;
+    final previousScreenId = screenStack.last;
     final index = screenStack.indexWhere(
-      (e) => e.screenId == navigationEvent.screenId,
+      (screenId) => screenId == navigationEvent.screenId,
     );
     // If not found, or the topmost one
     if (index == -1 || index == screenStack.length - 1) {
@@ -178,12 +176,11 @@ class RubigoStackManager<SCREEN_ID extends Object> with ChangeNotifier {
     }
     screenStack.removeRange(index + 1, screenStack.length);
 
-    final newScreen = screenStack.last;
-    final controller = newScreen.getController();
+    final controller = _getRubigoScreen(screenStack.last).getController();
     final changeInfo = RubigoChangeInfo(
       EventType.popTo,
-      previousScreen.screenId,
-      screenStack.toListOfScreenId(),
+      previousScreenId,
+      screenStack,
     );
     if (controller is RubigoControllerMixin) {
       _eventCounter++;
@@ -196,15 +193,13 @@ class RubigoStackManager<SCREEN_ID extends Object> with ChangeNotifier {
   Future<RubigoChangeInfo<SCREEN_ID>> _replaceStack(
     ReplaceStack<SCREEN_ID> navigationEvent,
   ) async {
-    final previousScreen = screenStack.last;
-    screenStack = navigationEvent.screenStack.toListOfRubigoScreen(
-      _availableScreens,
-    );
-    final controller = screenStack.last.getController();
+    final previousScreenId = screenStack.last;
+    screenStack = navigationEvent.screenStack;
+    final controller = _getRubigoScreen(screenStack.last).getController();
     final changeInfo = RubigoChangeInfo(
       EventType.replaceStack,
-      previousScreen.screenId,
-      screenStack.toListOfScreenId(),
+      previousScreenId,
+      screenStack,
     );
     if (controller is RubigoControllerMixin) {
       _eventCounter++;
@@ -218,7 +213,7 @@ class RubigoStackManager<SCREEN_ID extends Object> with ChangeNotifier {
     Remove<SCREEN_ID> navigationEvent,
   ) async {
     final index = screenStack.indexWhere(
-      (e) => e.screenId == navigationEvent.screenId,
+      (screenId) => screenId == navigationEvent.screenId,
     );
     if (index == -1) {
       final txt = 'Developer: You can only remove screens that exist on the '
@@ -229,7 +224,7 @@ class RubigoStackManager<SCREEN_ID extends Object> with ChangeNotifier {
     screenStack.removeAt(index);
   }
 
-  //endregion navigate
+  //endregion private
 
   /// Force Flutters [Navigator] to match our list of [screens].
   Future<void> updateScreens() async {
@@ -241,12 +236,12 @@ class RubigoStackManager<SCREEN_ID extends Object> with ChangeNotifier {
     _screens = [...screenStack];
     await _logNavigation(
       'Screens: '
-      '${screens.toListOfScreenId().map(getName).join('→')}.',
+      '${screens.map(getName).join('→')}.',
     );
     notifyListeners();
     // Inform al controllers that were removed from the stack.
-    for (final screen in oldScreenSet.difference(newScreenSet)) {
-      final controller = screen.getController();
+    for (final screenId in oldScreenSet.difference(newScreenSet)) {
+      final controller = _getRubigoScreen(screenId).getController();
       if (controller is RubigoControllerMixin<SCREEN_ID>) {
         _inRemovedFromStack = true;
         await controller.removedFromStack();

@@ -16,26 +16,26 @@ void main() {
       RubigoScreen(
         _Screens.splashScreen,
         const _SplashScreen(),
-        () => holder.getOrCreate(_SplashController.new),
+        () => holder.getOrCreate<_SplashController>(_SplashController.new),
       ),
       RubigoScreen(
         _Screens.s100,
         const _S100Screen(),
-        () => holder.getOrCreate(_S100Controller.new),
+        () => holder.getOrCreate<_S100Controller>(_S100Controller.new),
       ),
       RubigoScreen(
         _Screens.s200,
         const _S200Screen(),
-        () => holder.getOrCreate(_S200Controller.new),
+        () => holder.getOrCreate<_S200Controller>(_S200Controller.new),
       ),
       RubigoScreen(
         _Screens.s300,
         const _S300Screen(),
-        () => holder.getOrCreate(_S300Controller.new),
+        () => holder.getOrCreate<_S300Controller>(_S300Controller.new),
       ),
     ];
     rubigoRouter = RubigoRouter(
-      availableScreens: availableScreens,
+      getRubigoScreen: availableScreens,
       splashScreenId: _Screens.splashScreen,
       logNavigation: (message) async => logNavigation.add(message),
     );
