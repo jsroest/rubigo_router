@@ -11,5 +11,5 @@ typedef LogNavigation = Future<void> Function(String message);
 typedef PostNavigationCallback = Future<void> Function();
 
 /// A function to get a RubigoScreen.
-typedef GetRubigoScreen<SCREEN_ID extends Object> = RubigoScreen<SCREEN_ID>
+typedef ScreenProvider<SCREEN_ID extends Object> = RubigoScreen<SCREEN_ID>
     Function(SCREEN_ID screenId);

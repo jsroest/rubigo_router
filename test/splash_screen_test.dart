@@ -18,7 +18,7 @@ void main() {
 
   setUp(() {
     holder = RubigoHolder();
-    RubigoScreen<_Screens> getRubigoScreen(
+    RubigoScreen<_Screens> screenProvider(
       _Screens screenId,
     ) {
       switch (screenId) {
@@ -58,7 +58,7 @@ void main() {
     }
 
     rubigoRouter = RubigoRouter(
-      getRubigoScreen: getRubigoScreen,
+      screenProvider: screenProvider,
       splashScreenId: _Screens.splashScreen,
     );
   });

@@ -15,12 +15,12 @@ enum _Screens {
 void main() {
   late RubigoHolder holder;
   late RubigoRouter<_Screens> rubigoRouter;
-  late RubigoScreen<_Screens> Function(_Screens screenId) getRubigoScreen;
+  late RubigoScreen<_Screens> Function(_Screens screenId) screenProvider;
 
   setUp(
     () {
       holder = RubigoHolder();
-      getRubigoScreen = (_Screens screenId) {
+      screenProvider = (_Screens screenId) {
         switch (screenId) {
           case _Screens.splashScreen:
             return RubigoScreen(
@@ -57,7 +57,7 @@ void main() {
         }
       };
       rubigoRouter = RubigoRouter(
-        getRubigoScreen: getRubigoScreen,
+        screenProvider: screenProvider,
         splashScreenId: _Screens.splashScreen,
         logNavigation: (message) async {},
       );
@@ -68,7 +68,7 @@ void main() {
     'toListOfScreenId',
     () {
       final availableScreens =
-          _Screens.values.map((e) => getRubigoScreen(e)).toList();
+          _Screens.values.map((e) => screenProvider(e)).toList();
       final listOfScreenId = availableScreens.toListOfScreenId();
       expect(availableScreens[0].screenId, listOfScreenId[0]);
       expect(availableScreens[1].screenId, listOfScreenId[1]);
@@ -80,7 +80,7 @@ void main() {
     'toListOfWidget',
     () {
       final availableScreens =
-          _Screens.values.map((e) => getRubigoScreen(e)).toList();
+          _Screens.values.map((e) => screenProvider(e)).toList();
       final listOfWidget = availableScreens.toListOfWidget();
       expect(availableScreens[0].getScreenWidget().runtimeType,
           listOfWidget[0].runtimeType);
@@ -123,13 +123,13 @@ void main() {
     'toListOfRubigoScreen',
     () {
       final availableScreens =
-          _Screens.values.map((e) => getRubigoScreen(e)).toList();
+          _Screens.values.map((e) => screenProvider(e)).toList();
       final list1 = [
         availableScreens.find(_Screens.s100),
         availableScreens.find(_Screens.s200),
       ];
       final stack = [_Screens.s100, _Screens.s200];
-      final list2 = stack.toListOfRubigoScreen(getRubigoScreen);
+      final list2 = stack.toListOfRubigoScreen(screenProvider);
       expect(listEquals(list1, list2), true);
     },
   );
@@ -181,7 +181,7 @@ void main() {
     'currentScreenId',
     () async {
       final rubigoRouter = RubigoRouter(
-        getRubigoScreen: getRubigoScreen,
+        screenProvider: screenProvider,
         splashScreenId: _Screens.s100,
       );
       expect(rubigoRouter.currentScreenId, _Screens.s100);

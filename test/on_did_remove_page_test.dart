@@ -13,7 +13,7 @@ void main() {
     () {
       logNavigation.clear();
       holder = RubigoHolder();
-      RubigoScreen<_Screens> getRubigoScreen(_Screens screenId) {
+      RubigoScreen<_Screens> screenProvider(_Screens screenId) {
         switch (screenId) {
           case _Screens.splashScreen:
             return RubigoScreen(
@@ -43,7 +43,7 @@ void main() {
       }
 
       rubigoRouter = RubigoRouter(
-        getRubigoScreen: getRubigoScreen,
+        screenProvider: screenProvider,
         splashScreenId: _Screens.splashScreen,
         logNavigation: (message) async => logNavigation.add(message),
       );

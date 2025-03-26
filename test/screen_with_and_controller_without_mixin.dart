@@ -12,13 +12,13 @@ enum _Screens {
 void main() {
   late RubigoHolder holder;
   late RubigoRouter<_Screens> rubigoRouter;
-  late RubigoScreen<_Screens> Function(_Screens) getRubigoScreen;
+  late RubigoScreen<_Screens> Function(_Screens) screenProvider;
   final logNavigation = <String>[];
 
   setUp(() async {
     logNavigation.clear();
     holder = RubigoHolder();
-    getRubigoScreen = (_Screens screenId) {
+    screenProvider = (_Screens screenId) {
       switch (screenId) {
         case _Screens.splashScreen:
           return RubigoScreen(
@@ -56,7 +56,7 @@ void main() {
     };
 
     rubigoRouter = RubigoRouter(
-      getRubigoScreen: getRubigoScreen,
+      screenProvider: screenProvider,
       splashScreenId: _Screens.splashScreen,
       logNavigation: (message) async => logNavigation.add(message),
     );
@@ -65,7 +65,7 @@ void main() {
 
   void checkControllers(List<RubigoScreen> screens) {
     for (final screenId in _Screens.values) {
-      final rubigoScreen = getRubigoScreen(screenId);
+      final rubigoScreen = screenProvider(screenId);
       final screenWidget = rubigoScreen.getScreenWidget();
       if (screenWidget is RubigoScreenMixin) {
         final ref1 = (screenWidget as RubigoScreenMixin).controller;

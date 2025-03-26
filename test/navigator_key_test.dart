@@ -9,7 +9,7 @@ void main() {
   final holder = RubigoHolder();
   final key = GlobalKey<NavigatorState>();
 
-  RubigoScreen<_Screens> getRubigoScreen(_Screens screenId) {
+  RubigoScreen<_Screens> screenProvider(_Screens screenId) {
     switch (screenId) {
       case _Screens.splashScreen:
         return RubigoScreen(
@@ -34,7 +34,7 @@ void main() {
     'Navigator key passed',
     () {
       rubigoRouter = RubigoRouter<_Screens>(
-        getRubigoScreen: getRubigoScreen,
+        screenProvider: screenProvider,
         navigatorKey: key,
         splashScreenId: _Screens.splashScreen,
       );
@@ -49,7 +49,7 @@ void main() {
     'Navigator key not passed',
     () {
       rubigoRouter = RubigoRouter<_Screens>(
-        getRubigoScreen: getRubigoScreen,
+        screenProvider: screenProvider,
         splashScreenId: _Screens.splashScreen,
       );
       expect(

@@ -36,9 +36,9 @@ extension ExtensionOnListOfScreenId<SCREEN_ID extends Object>
 
   /// Converts a list of screenId to a list of RubigoScreen
   List<RubigoScreen<SCREEN_ID>> toListOfRubigoScreen(
-    GetRubigoScreen<SCREEN_ID> getRubigoScreen,
+    ScreenProvider<SCREEN_ID> screenProvider,
   ) =>
-      map((screenId) => getRubigoScreen(screenId)).toList();
+      map((screenId) => screenProvider(screenId)).toList();
 
   /// Converts a list of screenId to a breadcrumbs String.
   /// S100→S200→S300

@@ -46,7 +46,7 @@ enum Screens {
 // A simple service locator to hold controllers.
 final holder = RubigoHolder();
 
-RubigoScreen<Screens> getRubigoScreen(
+RubigoScreen<Screens> screenProvider(
   Screens screenId,
 ) {
   switch (screenId) {

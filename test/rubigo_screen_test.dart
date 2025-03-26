@@ -10,7 +10,7 @@ enum _Screens {
 void main() {
   final rubigoRouter = RubigoRouter(
     splashScreenId: 'a',
-    getRubigoScreen: (String screenId) => throw UnimplementedError(),
+    screenProvider: (String screenId) => throw UnimplementedError(),
   );
 
   test(
