@@ -13,7 +13,7 @@ class S220Screen extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return Sx20Screen(
-      controller: controller,
+      rubigoRouter: controller.rubigoRouter,
       sX20Screen: Screens.s220,
       sX30Screen: Screens.s230,
       onPushButtonPressed: controller.onS230ButtonPressed,

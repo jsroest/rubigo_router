@@ -14,7 +14,7 @@ extension ExtensionOnListOfRubigoScreens<SCREEN_ID extends Object>
   List<SCREEN_ID> toListOfScreenId() => map((e) => e.screenId).toList();
 
   /// Converts this list to a list of screenWidgets
-  List<Widget> toListOfWidget() => map((e) => e.getScreenWidget()).toList();
+  List<Widget> toListOfWidget() => map((e) => e.screenWidget()).toList();
 }
 
 /// A collection of extension methods on list of [List<SCREEN_ID>].
@@ -50,13 +50,13 @@ extension ExtensionOnRubigoScreen on RubigoScreen {
   /// Converts a [RubigoScreen] to a [MaterialPage]
   MaterialPage<void> toMaterialPage() => MaterialPage(
         key: pageKey,
-        child: getScreenWidget(),
+        child: screenWidget(),
       );
 
   /// Converts a [RubigoScreen] to a [CupertinoPage]
   CupertinoPage<void> toCupertinoPage() => CupertinoPage(
         key: pageKey,
-        child: getScreenWidget(),
+        child: screenWidget(),
       );
 }
 

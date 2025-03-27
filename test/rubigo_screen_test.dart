@@ -8,31 +8,23 @@ enum _Screens {
 }
 
 void main() {
-  final rubigoRouter = RubigoRouter(
-    splashScreenId: 'a',
-    screenProvider: (String screenId) => throw UnimplementedError(),
-  );
-
   test(
     'Test rubigo screen equality and hashcode',
     () {
       final screen1 = RubigoScreen(
         screenId: _Screens.s100,
-        getScreenWidget: Container.new,
-        getController: Object.new,
-        getRubigoRouter: () => rubigoRouter,
+        screenWidget: Container.new,
+        controller: Object.new,
       );
       final screen2 = RubigoScreen(
         screenId: _Screens.s100,
-        getScreenWidget: Container.new,
-        getController: Object.new,
-        getRubigoRouter: () => rubigoRouter,
+        screenWidget: Container.new,
+        controller: Object.new,
       );
       final screen3 = RubigoScreen(
         screenId: _Screens.s200,
-        getScreenWidget: Container.new,
-        getController: Object.new,
-        getRubigoRouter: () => rubigoRouter,
+        screenWidget: Container.new,
+        controller: Object.new,
       );
       expect(screen1, screen2);
       expect(screen1.hashCode, screen2.hashCode);

@@ -7,6 +7,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:rubigo_router/rubigo_router.dart';
 
 class S130Controller with RubigoControllerMixin<Screens> {
+  S130Controller(this.rubigoRouter);
+
+  final RubigoRouter<Screens> rubigoRouter;
+
   final allowBackGesture = ValueNotifier(false);
 
   final mayPop_ = ValueNotifier(true);

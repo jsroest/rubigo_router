@@ -4,9 +4,9 @@ import 'package:example/widgets/navigate_button.dart';
 import 'package:flutter/material.dart';
 import 'package:rubigo_router/rubigo_router.dart';
 
-class Sx20Screen extends StatelessWidget {
+class Sx20Screen extends StatelessWidget with RubigoControllerMixin<Screens> {
   const Sx20Screen({
-    required this.controller,
+    required this.rubigoRouter,
     required this.sX20Screen,
     required this.sX30Screen,
     required this.onPushButtonPressed,
@@ -14,7 +14,7 @@ class Sx20Screen extends StatelessWidget {
     super.key,
   });
 
-  final RubigoControllerMixin controller;
+  final RubigoRouter<Screens> rubigoRouter;
   final Screens sX20Screen;
   final Screens sX30Screen;
   final VoidCallback onPushButtonPressed;
@@ -24,10 +24,10 @@ class Sx20Screen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: rubigoBackButton(context, controller.rubigoRouter),
+        leading: rubigoBackButton(context, rubigoRouter),
         title: AppBarTitleBreadCrumbs(
           title: sX20Screen.name.toUpperCase(),
-          rubigoRouter: controller.rubigoRouter,
+          rubigoRouter: rubigoRouter,
         ),
       ),
       body: Center(
@@ -40,7 +40,7 @@ class Sx20Screen extends StatelessWidget {
               child: Text('Push ${sX30Screen.name.toUpperCase()}'),
             ),
             NavigateButton(
-              rubigoRouter: controller.rubigoRouter,
+              rubigoRouter: rubigoRouter,
               isEnabled: (screenStack) => screenStack.hasScreenBelow(),
               onPressed: onPopButtonPressed,
               child: const Text('Pop'),

@@ -17,38 +17,40 @@ void main() {
   late RubigoRouter<_Screens> rubigoRouter;
   final logNavigation = <String>[];
 
-  setUp(() async {});
+  setUp(() {
+    holder = RubigoHolder();
+  });
 
   test(
     'AuthChange event before init is finished',
     () async {
       logNavigation.clear();
-      holder = RubigoHolder();
       RubigoScreen<_Screens> screenProvider(_Screens screenId) {
         switch (screenId) {
           case _Screens.splashScreen:
             return RubigoScreen(
               screenId: _Screens.splashScreen,
-              getScreenWidget: _SplashScreen.new,
-              getController: () =>
-                  holder.getOrCreate<_SplashController>(_SplashController.new),
-              getRubigoRouter: () => rubigoRouter,
+              screenWidget: _SplashScreen.new,
+              controller: () => holder.getOrCreate<_SplashController>(
+                () => _SplashController(holder.get<RubigoRouter<_Screens>>()),
+              ),
             );
           case _Screens.s100LoginScreen:
             return RubigoScreen(
               screenId: _Screens.s100LoginScreen,
-              getScreenWidget: _S100LoginScreen.new,
-              getController: () => holder
-                  .getOrCreate<_S100LoginController>(_S100LoginController.new),
-              getRubigoRouter: () => rubigoRouter,
+              screenWidget: _S100LoginScreen.new,
+              controller: () => holder.getOrCreate<_S100LoginController>(
+                () =>
+                    _S100LoginController(holder.get<RubigoRouter<_Screens>>()),
+              ),
             );
           case _Screens.s200HomeScreen:
             return RubigoScreen(
               screenId: _Screens.s200HomeScreen,
-              getScreenWidget: _S200HomeScreen.new,
-              getController: () => holder
-                  .getOrCreate<_S200HomeController>(_S200HomeController.new),
-              getRubigoRouter: () => rubigoRouter,
+              screenWidget: _S200HomeScreen.new,
+              controller: () => holder.getOrCreate<_S200HomeController>(
+                () => _S200HomeController(holder.get<RubigoRouter<_Screens>>()),
+              ),
             );
         }
       }
@@ -58,6 +60,7 @@ void main() {
         splashScreenId: _Screens.splashScreen,
         logNavigation: (message) async => logNavigation.add(message),
       );
+      holder.getOrCreate(() => rubigoRouter);
       await _handleAuthChangeEvent(
         isInitialized: rubigoRouter.isInitialized,
         isAuthenticated: true,
@@ -149,7 +152,9 @@ class _SplashScreen extends StatelessWidget {
   }
 }
 
-class _SplashController extends MockController<_Screens> {}
+class _SplashController extends MockController<_Screens> {
+  _SplashController(super.rubigoRouter);
+}
 //endregion
 
 //region S100Screen
@@ -169,7 +174,9 @@ class _S100LoginScreen extends StatelessWidget
   }
 }
 
-class _S100LoginController extends MockController<_Screens> {}
+class _S100LoginController extends MockController<_Screens> {
+  _S100LoginController(super.rubigoRouter);
+}
 //endregion
 
 //region S200Screen
@@ -189,7 +196,9 @@ class _S200HomeScreen extends StatelessWidget
   }
 }
 
-class _S200HomeController extends MockController<_Screens> {}
+class _S200HomeController extends MockController<_Screens> {
+  _S200HomeController(super.rubigoRouter);
+}
 //endregion
 
 //region handleAuthChangeEvent

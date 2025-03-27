@@ -11,52 +11,54 @@ enum _Screens {
 }
 
 void main() {
-  late RubigoRouter<_Screens> rubigoRouter;
   final logNavigation = <String>[];
+  late RubigoHolder holder;
   setUp(
     () {
       logNavigation.clear();
-      final holder = RubigoHolder();
-
+      holder = RubigoHolder();
       RubigoScreen<_Screens> screenProvider(_Screens screenId) {
         switch (screenId) {
           case _Screens.splashScreen:
             return RubigoScreen(
               screenId: _Screens.splashScreen,
-              getScreenWidget: _SplashScreen.new,
-              getController: () =>
-                  holder.getOrCreate<_SplashController>(_SplashController.new),
-              getRubigoRouter: () => rubigoRouter,
+              screenWidget: _SplashScreen.new,
+              controller: () => holder.getOrCreate<_SplashController>(
+                () => _SplashController(holder.get<RubigoRouter<_Screens>>()),
+              ),
             );
           case _Screens.s100:
             return RubigoScreen(
               screenId: _Screens.s100,
-              getScreenWidget: _S100Screen.new,
-              getController: () =>
-                  holder.getOrCreate<_S100Controller>(_S100Controller.new),
-              getRubigoRouter: () => rubigoRouter,
+              screenWidget: _S100Screen.new,
+              controller: () => holder.getOrCreate<_S100Controller>(
+                () => _S100Controller(holder.get<RubigoRouter<_Screens>>()),
+              ),
             );
           case _Screens.s200:
             return RubigoScreen(
               screenId: _Screens.s200,
-              getScreenWidget: _S200Screen.new,
-              getController: () =>
-                  holder.getOrCreate<_S200Controller>(_S200Controller.new),
-              getRubigoRouter: () => rubigoRouter,
+              screenWidget: _S200Screen.new,
+              controller: () => holder.getOrCreate<_S200Controller>(
+                () => _S200Controller(holder.get<RubigoRouter<_Screens>>()),
+              ),
             );
         }
       }
 
-      rubigoRouter = RubigoRouter(
-        screenProvider: screenProvider,
-        splashScreenId: _Screens.splashScreen,
-        logNavigation: (message) async => logNavigation.add(message),
+      holder.getOrCreate(
+        () => RubigoRouter(
+          screenProvider: screenProvider,
+          splashScreenId: _Screens.splashScreen,
+          logNavigation: (message) async => logNavigation.add(message),
+        ),
       );
     },
   );
   testWidgets(
     'rubigoBackGesture',
     (tester) async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       await tester.pumpWidget(
         RubigoMaterialApp(
           backButtonDispatcher: RubigoRootBackButtonDispatcher(rubigoRouter),
@@ -104,7 +106,9 @@ class _SplashScreen extends StatelessWidget {
   }
 }
 
-class _SplashController extends MockController<_Screens> {}
+class _SplashController extends MockController<_Screens> {
+  _SplashController(super.rubigoRouter);
+}
 //endregion
 
 //region S100Screen
@@ -124,7 +128,9 @@ class _S100Screen extends StatelessWidget
   }
 }
 
-class _S100Controller extends MockController<_Screens> {}
+class _S100Controller extends MockController<_Screens> {
+  _S100Controller(super.rubigoRouter);
+}
 //endregion
 
 //region S200Screen
@@ -150,5 +156,7 @@ class _S200Screen extends StatelessWidget
   }
 }
 
-class _S200Controller extends MockController<_Screens> {}
+class _S200Controller extends MockController<_Screens> {
+  _S200Controller(super.rubigoRouter);
+}
 //endregion

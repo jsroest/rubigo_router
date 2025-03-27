@@ -23,34 +23,30 @@ void main() {
         case _Screens.splashScreen:
           return RubigoScreen(
             screenId: _Screens.splashScreen,
-            getScreenWidget: _SplashScreen.new,
-            getController: () =>
+            screenWidget: _SplashScreen.new,
+            controller: () =>
                 holder.getOrCreate<_SplashController>(_SplashController.new),
-            getRubigoRouter: () => rubigoRouter,
           );
         case _Screens.s100:
           return RubigoScreen(
             screenId: _Screens.s100,
-            getScreenWidget: _S100Screen.new,
-            getController: () =>
+            screenWidget: _S100Screen.new,
+            controller: () =>
                 holder.getOrCreate<_S100Controller>(_S100Controller.new),
-            getRubigoRouter: () => rubigoRouter,
           );
         case _Screens.s200:
           return RubigoScreen(
             screenId: _Screens.s200,
-            getScreenWidget: _S200Screen.new,
-            getController: () =>
+            screenWidget: _S200Screen.new,
+            controller: () =>
                 holder.getOrCreate<_S200Controller>(_S200Controller.new),
-            getRubigoRouter: () => rubigoRouter,
           );
         case _Screens.s300:
           return RubigoScreen(
             screenId: _Screens.s300,
-            getScreenWidget: _S300Screen.new,
-            getController: () =>
+            screenWidget: _S300Screen.new,
+            controller: () =>
                 holder.getOrCreate<_S300Controller>(_S300Controller.new),
-            getRubigoRouter: () => rubigoRouter,
           );
       }
     }

@@ -10,11 +10,9 @@ class RubigoScreen<SCREEN_ID extends Object> {
   /// Creates a [RubigoScreen]
   RubigoScreen({
     required this.screenId,
-    required Widget Function() getScreenWidget,
-    required Object Function() getController,
-    required this.getRubigoRouter,
-  })  : _getScreenWidget = getScreenWidget,
-        _getController = getController,
+    required Widget Function() screenWidget,
+    required this.controller,
+  })  : _screenWidget = screenWidget,
         pageKey = ValueKey(screenId);
 
   /// A unique key, based on the screenId. This key is used for [Page.key].
@@ -23,34 +21,21 @@ class RubigoScreen<SCREEN_ID extends Object> {
   /// The unique identifier for this [RubigoScreen]
   final SCREEN_ID screenId;
 
-  final Widget Function() _getScreenWidget;
+  final Widget Function() _screenWidget;
 
   /// The widget that represents this screen.
-  Widget getScreenWidget() {
-    final screenWidget = _getScreenWidget();
+  Widget screenWidget() {
+    final screenWidget = _screenWidget();
     if (screenWidget is RubigoScreenMixin) {
-      (screenWidget as RubigoScreenMixin).controller = getController();
+      (screenWidget as RubigoScreenMixin).controller = controller();
     }
     return screenWidget;
   }
 
-  final Object Function() _getController;
-
   /// Return the instance of the controller. You can use any dependency
   /// injection package in this function, as long as it always returns the same
   /// instance for the controller (singleton).
-  Object getController() {
-    final controller = _getController();
-    if (controller is RubigoControllerMixin) {
-      controller.rubigoRouter = getRubigoRouter();
-    }
-    return controller;
-  }
-
-  /// Return the instance of the rubigoRouter. You can use any dependency
-  /// injection package in this function, as long as it always returns the same
-  /// instance for the rubigoRouter (singleton).
-  final RubigoRouter<SCREEN_ID> Function() getRubigoRouter;
+  final Object Function() controller;
 
   @override
   bool operator ==(Object other) {

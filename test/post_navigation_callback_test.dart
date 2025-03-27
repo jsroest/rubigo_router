@@ -15,69 +15,78 @@ enum _Screens {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late RubigoHolder holder;
-  late RubigoRouter<_Screens> rubigoRouter;
   final logNavigation = <String>[];
 
   setUp(() async {
     logNavigation.clear();
     holder = RubigoHolder();
-    holder.getOrCreate<_SplashController>(_SplashController.new);
-    holder.getOrCreate<_S100LoginController>(_S100LoginController.new);
-    holder.getOrCreate<_S200HomeController>(_S200HomeController.new);
-    holder.getOrCreate<_S300GiveLocationController>(
-      _S300GiveLocationController.new,
-    );
     RubigoScreen<_Screens> screenProvider(_Screens screenId) {
       switch (screenId) {
         case _Screens.splashScreen:
           return RubigoScreen(
             screenId: _Screens.splashScreen,
-            getScreenWidget: _SplashScreen.new,
-            getController: () =>
-                holder.getOrCreate<_SplashController>(_SplashController.new),
-            getRubigoRouter: () => rubigoRouter,
+            screenWidget: _SplashScreen.new,
+            controller: () => holder.getOrCreate<_SplashController>(
+              () => _SplashController(holder.get<RubigoRouter<_Screens>>()),
+            ),
           );
         case _Screens.s100LoginScreen:
           return RubigoScreen(
             screenId: _Screens.s100LoginScreen,
-            getScreenWidget: _S100LoginScreen.new,
-            getController: () => holder
-                .getOrCreate<_S100LoginController>(_S100LoginController.new),
-            getRubigoRouter: () => rubigoRouter,
+            screenWidget: _S100LoginScreen.new,
+            controller: () => holder.getOrCreate<_S100LoginController>(
+              () => _S100LoginController(holder.get<RubigoRouter<_Screens>>()),
+            ),
           );
         case _Screens.s200HomeScreen:
           return RubigoScreen(
             screenId: _Screens.s200HomeScreen,
-            getScreenWidget: _S200HomeScreen.new,
-            getController: () => holder
-                .getOrCreate<_S200HomeController>(_S200HomeController.new),
-            getRubigoRouter: () => rubigoRouter,
+            screenWidget: _S200HomeScreen.new,
+            controller: () => holder.getOrCreate<_S200HomeController>(
+              () => _S200HomeController(holder.get<RubigoRouter<_Screens>>()),
+            ),
           );
         case _Screens.s300GiveLocation:
           return RubigoScreen(
             screenId: _Screens.s300GiveLocation,
-            getScreenWidget: _S300GiveLocationScreen.new,
-            getController: () =>
-                holder.getOrCreate<_S300GiveLocationController>(
-                    _S300GiveLocationController.new),
-            getRubigoRouter: () => rubigoRouter,
+            screenWidget: _S300GiveLocationScreen.new,
+            controller: () => holder.getOrCreate<_S300GiveLocationController>(
+              () => _S300GiveLocationController(
+                holder.get<RubigoRouter<_Screens>>(),
+              ),
+            ),
           );
       }
     }
 
-    rubigoRouter = RubigoRouter(
+    final rubigoRouter = RubigoRouter(
       screenProvider: screenProvider,
       splashScreenId: _Screens.splashScreen,
       logNavigation: (message) async => logNavigation.add(message),
     );
+    holder.getOrCreate(() => rubigoRouter);
     await rubigoRouter.init(
       initAndGetFirstScreen: () async => _Screens.s200HomeScreen,
+    );
+    //Make sure all items are available in the holder
+    holder.getOrCreate<_SplashController>(
+      () => _SplashController(holder.get<RubigoRouter<_Screens>>()),
+    );
+    holder.getOrCreate<_S100LoginController>(
+      () => _S100LoginController(holder.get<RubigoRouter<_Screens>>()),
+    );
+    holder.getOrCreate<_S200HomeController>(
+      () => _S200HomeController(holder.get<RubigoRouter<_Screens>>()),
+    );
+    holder.getOrCreate<_S300GiveLocationController>(
+      () => _S300GiveLocationController(holder.get<RubigoRouter<_Screens>>()),
     );
   });
 
   test(
     'S200 push(S300), simulate auth change in onTop s300',
     () async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       final s100LoginController = holder.get<_S100LoginController>();
       s100LoginController.callBackHistory.clear();
       final s200HomeController = holder.get<_S200HomeController>();
@@ -167,6 +176,7 @@ void main() {
   test(
     'S200 push(S300), simulate auth change in willShow s300',
     () async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       final s100LoginController = holder.get<_S100LoginController>();
       s100LoginController.callBackHistory.clear();
       final s200HomeController = holder.get<_S200HomeController>();
@@ -257,6 +267,7 @@ void main() {
   test(
     'S200 push(S300), simulate auth change in onTop, cancel in willShow s300',
     () async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       final s100LoginController = holder.get<_S100LoginController>();
       s100LoginController.callBackHistory.clear();
       final s200HomeController = holder.get<_S200HomeController>();
@@ -334,7 +345,9 @@ class _SplashScreen extends StatelessWidget {
   }
 }
 
-class _SplashController extends MockController<_Screens> {}
+class _SplashController extends MockController<_Screens> {
+  _SplashController(super.rubigoRouter);
+}
 //endregion
 
 //region S100Screen
@@ -354,7 +367,9 @@ class _S100LoginScreen extends StatelessWidget
   }
 }
 
-class _S100LoginController extends MockController<_Screens> {}
+class _S100LoginController extends MockController<_Screens> {
+  _S100LoginController(super.rubigoRouter);
+}
 //endregion
 
 //region S200Screen
@@ -374,7 +389,9 @@ class _S200HomeScreen extends StatelessWidget
   }
 }
 
-class _S200HomeController extends MockController<_Screens> {}
+class _S200HomeController extends MockController<_Screens> {
+  _S200HomeController(super.rubigoRouter);
+}
 //endregion
 
 //region S300Screen
@@ -395,6 +412,8 @@ class _S300GiveLocationScreen extends StatelessWidget
 }
 
 class _S300GiveLocationController extends MockController<_Screens> {
+  _S300GiveLocationController(super.rubigoRouter);
+
   bool authChangeInOnTop = false;
   bool authChangeInWillShow = false;
   bool cancelAuthChangeInWillShow = false;

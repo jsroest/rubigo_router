@@ -15,7 +15,6 @@ enum _Screens {
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   late RubigoHolder holder;
-  late RubigoRouter<_Screens> rubigoRouter;
   final logNavigation = <String>[];
 
   setUp(() async {
@@ -26,54 +25,58 @@ void main() {
         case _Screens.splashScreen:
           return RubigoScreen(
             screenId: _Screens.splashScreen,
-            getScreenWidget: _SplashScreen.new,
-            getController: () =>
-                holder.getOrCreate<_SplashController>(_SplashController.new),
-            getRubigoRouter: () => rubigoRouter,
+            screenWidget: _SplashScreen.new,
+            controller: () => holder.getOrCreate<_SplashController>(
+              () => _SplashController(holder.get<RubigoRouter<_Screens>>()),
+            ),
           );
         case _Screens.s100:
           return RubigoScreen(
             screenId: _Screens.s100,
-            getScreenWidget: _S100Screen.new,
-            getController: () =>
-                holder.getOrCreate<_S100Controller>(_S100Controller.new),
-            getRubigoRouter: () => rubigoRouter,
+            screenWidget: _S100Screen.new,
+            controller: () => holder.getOrCreate<_S100Controller>(
+              () => _S100Controller(holder.get<RubigoRouter<_Screens>>()),
+            ),
           );
         case _Screens.s200:
           return RubigoScreen(
             screenId: _Screens.s200,
-            getScreenWidget: _S200Screen.new,
-            getController: () =>
-                holder.getOrCreate<_S200Controller>(_S200Controller.new),
-            getRubigoRouter: () => rubigoRouter,
+            screenWidget: _S200Screen.new,
+            controller: () => holder.getOrCreate<_S200Controller>(
+              () => _S200Controller(holder.get<RubigoRouter<_Screens>>()),
+            ),
           );
         case _Screens.s300:
           return RubigoScreen(
             screenId: _Screens.s300,
-            getScreenWidget: _S300Screen.new,
-            getController: () =>
-                holder.getOrCreate<_S300Controller>(_S300Controller.new),
-            getRubigoRouter: () => rubigoRouter,
+            screenWidget: _S300Screen.new,
+            controller: () => holder.getOrCreate<_S300Controller>(
+              () => _S300Controller(holder.get<RubigoRouter<_Screens>>()),
+            ),
           );
       }
     }
 
-    rubigoRouter = RubigoRouter(
+    final rubigoRouter = RubigoRouter(
       screenProvider: screenProvider,
       splashScreenId: _Screens.splashScreen,
       logNavigation: (message) async => logNavigation.add(message),
     );
+    holder.getOrCreate(() => rubigoRouter);
     await rubigoRouter.init(initAndGetFirstScreen: () async => _Screens.s100);
   });
 
   test(
     'S100 push(S200), when busy',
     () async {
-      final s100Controller =
-          holder.getOrCreate<_S100Controller>(_S100Controller.new);
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
+      final s100Controller = holder.getOrCreate<_S100Controller>(
+        () => _S100Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s100Controller.callBackHistory.clear();
-      final s200Controller =
-          holder.getOrCreate<_S200Controller>(_S200Controller.new);
+      final s200Controller = holder.getOrCreate<_S200Controller>(
+        () => _S200Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s200Controller.callBackHistory.clear();
       await rubigoRouter.busyService.busyWrapper(
         () async {
@@ -134,11 +137,14 @@ void main() {
   test(
     'S100 push(S200), when not busy',
     () async {
-      final s100Controller =
-          holder.getOrCreate<_S100Controller>(_S100Controller.new);
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
+      final s100Controller = holder.getOrCreate<_S100Controller>(
+        () => _S100Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s100Controller.callBackHistory.clear();
-      final s200Controller =
-          holder.getOrCreate<_S200Controller>(_S200Controller.new);
+      final s200Controller = holder.getOrCreate<_S200Controller>(
+        () => _S200Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s200Controller.callBackHistory.clear();
       await rubigoRouter.push(_Screens.s200);
       expect(
@@ -194,14 +200,18 @@ void main() {
   test(
     'S100 replaceStack(S100-S200-S300), busy',
     () async {
-      final s100Controller =
-          holder.getOrCreate<_S100Controller>(_S100Controller.new);
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
+      final s100Controller = holder.getOrCreate<_S100Controller>(
+        () => _S100Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s100Controller.callBackHistory.clear();
-      final s200Controller =
-          holder.getOrCreate<_S200Controller>(_S200Controller.new);
+      final s200Controller = holder.getOrCreate<_S200Controller>(
+        () => _S200Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s200Controller.callBackHistory.clear();
-      final s300Controller =
-          holder.getOrCreate<_S300Controller>(_S300Controller.new);
+      final s300Controller = holder.getOrCreate<_S300Controller>(
+        () => _S300Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s300Controller.callBackHistory.clear();
       await rubigoRouter.busyService.busyWrapper(
         () async {
@@ -272,14 +282,18 @@ void main() {
   test(
     'S100 replaceStack(S100-S200-S300), when not busy',
     () async {
-      final s100Controller =
-          holder.getOrCreate<_S100Controller>(_S100Controller.new);
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
+      final s100Controller = holder.getOrCreate<_S100Controller>(
+        () => _S100Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s100Controller.callBackHistory.clear();
-      final s200Controller =
-          holder.getOrCreate<_S200Controller>(_S200Controller.new);
+      final s200Controller = holder.getOrCreate<_S200Controller>(
+        () => _S200Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s200Controller.callBackHistory.clear();
-      final s300Controller =
-          holder.getOrCreate<_S300Controller>(_S300Controller.new);
+      final s300Controller = holder.getOrCreate<_S300Controller>(
+        () => _S300Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s300Controller.callBackHistory.clear();
       await rubigoRouter.replaceStack([
         _Screens.s100,
@@ -346,19 +360,23 @@ void main() {
   test(
     'S100-s200-s300 pop(), when busy',
     () async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       await rubigoRouter.replaceStack([
         _Screens.s100,
         _Screens.s200,
         _Screens.s300,
       ]);
-      final s100Controller =
-          holder.getOrCreate<_S100Controller>(_S100Controller.new);
+      final s100Controller = holder.getOrCreate<_S100Controller>(
+        () => _S100Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s100Controller.callBackHistory.clear();
-      final s200Controller =
-          holder.getOrCreate<_S200Controller>(_S200Controller.new);
+      final s200Controller = holder.getOrCreate<_S200Controller>(
+        () => _S200Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s200Controller.callBackHistory.clear();
-      final s300Controller =
-          holder.getOrCreate<_S300Controller>(_S300Controller.new);
+      final s300Controller = holder.getOrCreate<_S300Controller>(
+        () => _S300Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s300Controller.callBackHistory.clear();
       await rubigoRouter.busyService.busyWrapper(
         () async {
@@ -425,19 +443,23 @@ void main() {
   test(
     'S100-s200-s300 pop(), when not busy',
     () async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       await rubigoRouter.replaceStack([
         _Screens.s100,
         _Screens.s200,
         _Screens.s300,
       ]);
-      final s100Controller =
-          holder.getOrCreate<_S100Controller>(_S100Controller.new);
+      final s100Controller = holder.getOrCreate<_S100Controller>(
+        () => _S100Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s100Controller.callBackHistory.clear();
-      final s200Controller =
-          holder.getOrCreate<_S200Controller>(_S200Controller.new);
+      final s200Controller = holder.getOrCreate<_S200Controller>(
+        () => _S200Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s200Controller.callBackHistory.clear();
-      final s300Controller =
-          holder.getOrCreate<_S300Controller>(_S300Controller.new);
+      final s300Controller = holder.getOrCreate<_S300Controller>(
+        () => _S300Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s300Controller.callBackHistory.clear();
       await rubigoRouter.pop();
       expect(
@@ -499,19 +521,23 @@ void main() {
   test(
     'S100-s200-s300 popTo(S100) when busy',
     () async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       await rubigoRouter.replaceStack([
         _Screens.s100,
         _Screens.s200,
         _Screens.s300,
       ]);
-      final s100Controller =
-          holder.getOrCreate<_S100Controller>(_S100Controller.new);
+      final s100Controller = holder.getOrCreate<_S100Controller>(
+        () => _S100Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s100Controller.callBackHistory.clear();
-      final s200Controller =
-          holder.getOrCreate<_S200Controller>(_S200Controller.new);
+      final s200Controller = holder.getOrCreate<_S200Controller>(
+        () => _S200Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s200Controller.callBackHistory.clear();
-      final s300Controller =
-          holder.getOrCreate<_S300Controller>(_S300Controller.new);
+      final s300Controller = holder.getOrCreate<_S300Controller>(
+        () => _S300Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s300Controller.callBackHistory.clear();
       await rubigoRouter.busyService.busyWrapper(
         () async {
@@ -574,19 +600,23 @@ void main() {
   test(
     'S100-s200-s300 popTo(S100) when not busy',
     () async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       await rubigoRouter.replaceStack([
         _Screens.s100,
         _Screens.s200,
         _Screens.s300,
       ]);
-      final s100Controller =
-          holder.getOrCreate<_S100Controller>(_S100Controller.new);
+      final s100Controller = holder.getOrCreate<_S100Controller>(
+        () => _S100Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s100Controller.callBackHistory.clear();
-      final s200Controller =
-          holder.getOrCreate<_S200Controller>(_S200Controller.new);
+      final s200Controller = holder.getOrCreate<_S200Controller>(
+        () => _S200Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s200Controller.callBackHistory.clear();
-      final s300Controller =
-          holder.getOrCreate<_S300Controller>(_S300Controller.new);
+      final s300Controller = holder.getOrCreate<_S300Controller>(
+        () => _S300Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s300Controller.callBackHistory.clear();
       await rubigoRouter.popTo(_Screens.s100);
       expect(
@@ -645,19 +675,23 @@ void main() {
   test(
     'S100-s200-s300 remove(S200) when busy',
     () async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       await rubigoRouter.replaceStack([
         _Screens.s100,
         _Screens.s200,
         _Screens.s300,
       ]);
-      final s100Controller =
-          holder.getOrCreate<_S100Controller>(_S100Controller.new);
+      final s100Controller = holder.getOrCreate<_S100Controller>(
+        () => _S100Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s100Controller.callBackHistory.clear();
-      final s200Controller =
-          holder.getOrCreate<_S200Controller>(_S200Controller.new);
+      final s200Controller = holder.getOrCreate<_S200Controller>(
+        () => _S200Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s200Controller.callBackHistory.clear();
-      final s300Controller =
-          holder.getOrCreate<_S300Controller>(_S300Controller.new);
+      final s300Controller = holder.getOrCreate<_S300Controller>(
+        () => _S300Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s300Controller.callBackHistory.clear();
       await rubigoRouter.busyService.busyWrapper(
         () async {
@@ -702,19 +736,23 @@ void main() {
   test(
     'S100-s200-s300 remove(S200) when not busy',
     () async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       await rubigoRouter.replaceStack([
         _Screens.s100,
         _Screens.s200,
         _Screens.s300,
       ]);
-      final s100Controller =
-          holder.getOrCreate<_S100Controller>(_S100Controller.new);
+      final s100Controller = holder.getOrCreate<_S100Controller>(
+        () => _S100Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s100Controller.callBackHistory.clear();
-      final s200Controller =
-          holder.getOrCreate<_S200Controller>(_S200Controller.new);
+      final s200Controller = holder.getOrCreate<_S200Controller>(
+        () => _S200Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s200Controller.callBackHistory.clear();
-      final s300Controller =
-          holder.getOrCreate<_S300Controller>(_S300Controller.new);
+      final s300Controller = holder.getOrCreate<_S300Controller>(
+        () => _S300Controller(holder.get<RubigoRouter<_Screens>>()),
+      );
       s300Controller.callBackHistory.clear();
       await rubigoRouter.remove(_Screens.s200);
       expect(
@@ -764,7 +802,9 @@ class _SplashScreen extends StatelessWidget {
   }
 }
 
-class _SplashController extends MockController<_Screens> {}
+class _SplashController extends MockController<_Screens> {
+  _SplashController(super.rubigoRouter);
+}
 //endregion
 
 //region S100Screen
@@ -784,7 +824,9 @@ class _S100Screen extends StatelessWidget
   }
 }
 
-class _S100Controller extends MockController<_Screens> {}
+class _S100Controller extends MockController<_Screens> {
+  _S100Controller(super.rubigoRouter);
+}
 //endregion
 
 //region S200Screen
@@ -804,7 +846,9 @@ class _S200Screen extends StatelessWidget
   }
 }
 
-class _S200Controller extends MockController<_Screens> {}
+class _S200Controller extends MockController<_Screens> {
+  _S200Controller(super.rubigoRouter);
+}
 //endregion
 
 //region S300Screen
@@ -824,5 +868,7 @@ class _S300Screen extends StatelessWidget
   }
 }
 
-class _S300Controller extends MockController<_Screens> {}
+class _S300Controller extends MockController<_Screens> {
+  _S300Controller(super.rubigoRouter);
+}
 //endregion

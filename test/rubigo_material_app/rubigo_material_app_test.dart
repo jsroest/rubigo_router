@@ -12,7 +12,7 @@ import 'helpers/rubigo_router_observer.mocks.dart';
 void main() {
   late MockNavigatorObserver mockNavigatorObserver;
   late RubigoNavigatorObserver rubigoNavigatorObserver;
-  late RubigoRouter<_Screens> rubigoRouter;
+  late RubigoHolder holder;
   final logNavigation = <String>[];
 
   setUp(
@@ -20,40 +20,45 @@ void main() {
       logNavigation.clear();
       mockNavigatorObserver = MockNavigatorObserver();
       rubigoNavigatorObserver = RubigoNavigatorObserver<_Screens>();
-      final holder = RubigoHolder();
+      holder = RubigoHolder();
+
       RubigoScreen<_Screens> screenProvider(_Screens screenId) {
         switch (screenId) {
           case _Screens.splashScreen:
             return RubigoScreen(
               screenId: _Screens.splashScreen,
-              getScreenWidget: _SplashScreen.new,
-              getController: () =>
-                  holder.getOrCreate<_SplashController>(_SplashController.new),
-              getRubigoRouter: () => rubigoRouter,
+              screenWidget: _SplashScreen.new,
+              controller: () => holder.getOrCreate<_SplashController>(
+                () => holder.getOrCreate<_SplashController>(
+                  () => _SplashController(holder.get<RubigoRouter<_Screens>>()),
+                ),
+              ),
             );
           case _Screens.s100:
             return RubigoScreen(
               screenId: _Screens.s100,
-              getScreenWidget: _S100Screen.new,
-              getController: () =>
-                  holder.getOrCreate<_S100Controller>(_S100Controller.new),
-              getRubigoRouter: () => rubigoRouter,
+              screenWidget: _S100Screen.new,
+              controller: () => holder.getOrCreate<_S100Controller>(
+                () => _S100Controller(holder.get<RubigoRouter<_Screens>>()),
+              ),
             );
           case _Screens.s200:
             return RubigoScreen(
               screenId: _Screens.s200,
-              getScreenWidget: _S200Screen.new,
-              getController: () =>
-                  holder.getOrCreate<_S200Controller>(_S200Controller.new),
-              getRubigoRouter: () => rubigoRouter,
+              screenWidget: _S200Screen.new,
+              controller: () => holder.getOrCreate<_S200Controller>(
+                () => _S200Controller(holder.get<RubigoRouter<_Screens>>()),
+              ),
             );
         }
       }
 
-      rubigoRouter = RubigoRouter(
-        screenProvider: screenProvider,
-        splashScreenId: _Screens.splashScreen,
-        logNavigation: (message) async => logNavigation.add(message),
+      holder.getOrCreate<RubigoRouter<_Screens>>(
+        () => RubigoRouter(
+          screenProvider: screenProvider,
+          splashScreenId: _Screens.splashScreen,
+          logNavigation: (message) async => logNavigation.add(message),
+        ),
       );
     },
   );
@@ -61,6 +66,7 @@ void main() {
   testWidgets(
     'SplashScreen to S100, with delay  in init ',
     (tester) async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       await tester.pumpWidget(
         RubigoMaterialApp(
           backButtonDispatcher: RubigoRootBackButtonDispatcher(rubigoRouter),
@@ -111,6 +117,7 @@ void main() {
   testWidgets(
     'SplashScreen to S100, no delay  in init ',
     (tester) async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       await tester.pumpWidget(
         RubigoMaterialApp(
           backButtonDispatcher: RubigoRootBackButtonDispatcher(rubigoRouter),
@@ -153,6 +160,7 @@ void main() {
   testWidgets(
     'Delayed progress indicator when busy',
     (tester) async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       await tester.pumpWidget(
         RubigoMaterialApp(
           backButtonDispatcher: RubigoRootBackButtonDispatcher(rubigoRouter),
@@ -200,6 +208,7 @@ void main() {
   testWidgets(
     'S100 ui.push(S200)',
     (tester) async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       await tester.pumpWidget(
         RubigoMaterialApp(
           backButtonDispatcher: RubigoRootBackButtonDispatcher(rubigoRouter),
@@ -235,6 +244,7 @@ void main() {
   testWidgets(
     'S100-S200 UI BackButton',
     (tester) async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       await tester.pumpWidget(
         RubigoMaterialApp(
           backButtonDispatcher: RubigoRootBackButtonDispatcher(rubigoRouter),
@@ -278,6 +288,7 @@ void main() {
   testWidgets(
     'S100-S200 UI BackButton, when busy',
     (tester) async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       await tester.pumpWidget(
         RubigoMaterialApp(
           backButtonDispatcher: RubigoRootBackButtonDispatcher(rubigoRouter),
@@ -331,6 +342,7 @@ void main() {
   testWidgets(
     'S100-S200 Hardware BackButton',
     (tester) async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       final backButtonDispatcher = RubigoRootBackButtonDispatcher(rubigoRouter);
       await tester.pumpWidget(
         RubigoMaterialApp(
@@ -377,6 +389,7 @@ void main() {
   testWidgets(
     'S100-S200 Hardware BackButton, when busy',
     (tester) async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       final backButtonDispatcher = RubigoRootBackButtonDispatcher(rubigoRouter);
       await tester.pumpWidget(
         RubigoMaterialApp(
@@ -425,6 +438,7 @@ void main() {
   testWidgets(
     'S100-S200 Hardware BackButton, when dialog shows',
     (tester) async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       final backButtonDispatcher = RubigoRootBackButtonDispatcher(rubigoRouter);
       await tester.pumpWidget(
         RubigoMaterialApp(
@@ -473,6 +487,7 @@ void main() {
   testWidgets(
     'S100-S200 Dialog shows, press button',
     (tester) async {
+      final rubigoRouter = holder.get<RubigoRouter<_Screens>>();
       final backButtonDispatcher = RubigoRootBackButtonDispatcher(rubigoRouter);
       await tester.pumpWidget(
         RubigoMaterialApp(
@@ -552,7 +567,9 @@ class _SplashScreen extends StatelessWidget {
   }
 }
 
-class _SplashController extends MockController<_Screens> {}
+class _SplashController extends MockController<_Screens> {
+  _SplashController(super.rubigoRouter);
+}
 //endregion
 
 //region S100Screen
@@ -572,7 +589,9 @@ class _S100Screen extends StatelessWidget
   }
 }
 
-class _S100Controller extends MockController<_Screens> {}
+class _S100Controller extends MockController<_Screens> {
+  _S100Controller(super.rubigoRouter);
+}
 //endregion
 
 //region S200Screen
@@ -592,5 +611,7 @@ class _S200Screen extends StatelessWidget
   }
 }
 
-class _S200Controller extends MockController<_Screens> {}
+class _S200Controller extends MockController<_Screens> {
+  _S200Controller(super.rubigoRouter);
+}
 //endregion

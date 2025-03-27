@@ -14,18 +14,18 @@ void main() {
       case _Screens.splashScreen:
         return RubigoScreen(
           screenId: _Screens.splashScreen,
-          getScreenWidget: _SplashScreen.new,
-          getController: () =>
-              holder.getOrCreate<_SplashController>(_SplashController.new),
-          getRubigoRouter: () => rubigoRouter,
+          screenWidget: _SplashScreen.new,
+          controller: () => holder.getOrCreate<_SplashController>(
+            () => _SplashController(holder.get<RubigoRouter<_Screens>>()),
+          ),
         );
       case _Screens.s100:
         return RubigoScreen(
           screenId: _Screens.s100,
-          getScreenWidget: _S100Screen.new,
-          getController: () =>
-              holder.getOrCreate<_S100Controller>(_S100Controller.new),
-          getRubigoRouter: () => rubigoRouter,
+          screenWidget: _S100Screen.new,
+          controller: () => holder.getOrCreate<_S100Controller>(
+            () => _S100Controller(holder.get<RubigoRouter<_Screens>>()),
+          ),
         );
     }
   }
@@ -76,7 +76,9 @@ class _SplashScreen extends StatelessWidget {
   }
 }
 
-class _SplashController extends MockController<_Screens> {}
+class _SplashController extends MockController<_Screens> {
+  _SplashController(super.rubigoRouter);
+}
 //endregion
 
 //region S100Screen
@@ -96,5 +98,7 @@ class _S100Screen extends StatelessWidget
   }
 }
 
-class _S100Controller extends MockController<_Screens> {}
+class _S100Controller extends MockController<_Screens> {
+  _S100Controller(super.rubigoRouter);
+}
 //endregion

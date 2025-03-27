@@ -359,7 +359,7 @@ This can happen when:
           // Get the page to pop from the stack.
           final screenId = _rubigoStackManager.screenStack.last;
           // Find the controller
-          final controller = _screenProvider(screenId).getController();
+          final controller = _screenProvider(screenId).controller();
           if (controller is RubigoControllerMixin<SCREEN_ID>) {
             // If the controller implements RubigoControllerMixin, call mayPop.
             await _logNavigation('Call mayPop().');

@@ -23,34 +23,30 @@ void main() {
         case _Screens.splashScreen:
           return RubigoScreen(
             screenId: _Screens.splashScreen,
-            getScreenWidget: _SplashScreen.new,
-            getController: () =>
+            screenWidget: _SplashScreen.new,
+            controller: () =>
                 holder.getOrCreate<_SplashController>(_SplashController.new),
-            getRubigoRouter: () => rubigoRouter,
           );
         case _Screens.s100:
           return RubigoScreen(
             screenId: _Screens.s100,
-            getScreenWidget: _S100Screen.new,
-            getController: () =>
+            screenWidget: _S100Screen.new,
+            controller: () =>
                 holder.getOrCreate<_S100Controller>(_S100Controller.new),
-            getRubigoRouter: () => rubigoRouter,
           );
         case _Screens.s200:
           return RubigoScreen(
             screenId: _Screens.s200,
-            getScreenWidget: _S200Screen.new,
-            getController: () =>
+            screenWidget: _S200Screen.new,
+            controller: () =>
                 holder.getOrCreate<_S200Controller>(_S200Controller.new),
-            getRubigoRouter: () => rubigoRouter,
           );
         case _Screens.s300:
           return RubigoScreen(
             screenId: _Screens.s300,
-            getScreenWidget: _S300Screen.new,
-            getController: () =>
+            screenWidget: _S300Screen.new,
+            controller: () =>
                 holder.getOrCreate<_S300Controller>(_S300Controller.new),
-            getRubigoRouter: () => rubigoRouter,
           );
       }
     };
@@ -66,10 +62,10 @@ void main() {
   void checkControllers(List<RubigoScreen> screens) {
     for (final screenId in _Screens.values) {
       final rubigoScreen = screenProvider(screenId);
-      final screenWidget = rubigoScreen.getScreenWidget();
+      final screenWidget = rubigoScreen.screenWidget();
       if (screenWidget is RubigoScreenMixin) {
         final ref1 = (screenWidget as RubigoScreenMixin).controller;
-        final ref2 = rubigoScreen.getController();
+        final ref2 = rubigoScreen.controller();
         expect(identical(ref1, ref2), true);
       }
     }

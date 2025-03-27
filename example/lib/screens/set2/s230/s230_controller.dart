@@ -7,6 +7,10 @@ import 'package:flutter/foundation.dart';
 import 'package:rubigo_router/rubigo_router.dart';
 
 class S230Controller with RubigoControllerMixin<Screens> {
+  S230Controller(this.rubigoRouter);
+
+  final RubigoRouter<Screens> rubigoRouter;
+
   final allowBackGesture = ValueNotifier(false);
 
   final mayPop_ = ValueNotifier(true);

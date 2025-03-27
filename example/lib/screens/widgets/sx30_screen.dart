@@ -6,7 +6,7 @@ import 'package:rubigo_router/rubigo_router.dart';
 
 class Sx30Screen extends StatelessWidget {
   const Sx30Screen({
-    required this.controller,
+    required this.rubigoRouter,
     required this.sX10Screen,
     required this.sX20Screen,
     required this.sX30Screen,
@@ -27,7 +27,7 @@ class Sx30Screen extends StatelessWidget {
     super.key,
   });
 
-  final RubigoControllerMixin controller;
+  final RubigoRouter<Screens> rubigoRouter;
   final Screens sX10Screen;
   final Screens sX20Screen;
   final Screens sX30Screen;
@@ -52,14 +52,14 @@ class Sx30Screen extends StatelessWidget {
       valueListenable: allowBackGesture,
       builder: (context, value, child) {
         return RubigoBackGesture(
-          rubigoRouter: controller.rubigoRouter,
+          rubigoRouter: rubigoRouter,
           allowBackGesture: value,
           child: Scaffold(
             appBar: AppBar(
-              leading: rubigoBackButton(context, controller.rubigoRouter),
+              leading: rubigoBackButton(context, rubigoRouter),
               title: AppBarTitleBreadCrumbs(
                 title: sX30Screen.name.toUpperCase(),
-                rubigoRouter: controller.rubigoRouter,
+                rubigoRouter: rubigoRouter,
               ),
             ),
             body: Center(
@@ -93,33 +93,33 @@ class Sx30Screen extends StatelessWidget {
                     ),
                   ),
                   NavigateButton(
-                    rubigoRouter: controller.rubigoRouter,
+                    rubigoRouter: rubigoRouter,
                     isEnabled: (_) => true,
                     onPressed: onPushSx040ButtonPressed,
                     child: Text('Push ${sX40Screen.name.toUpperCase()}'),
                   ),
                   NavigateButton(
-                    rubigoRouter: controller.rubigoRouter,
+                    rubigoRouter: rubigoRouter,
                     isEnabled: (screenStack) => screenStack.hasScreenBelow(),
                     onPressed: onPopButtonPressed,
                     child: const Text('Pop'),
                   ),
                   NavigateButton(
-                    rubigoRouter: controller.rubigoRouter,
+                    rubigoRouter: rubigoRouter,
                     isEnabled: (screenStack) =>
                         screenStack.containsScreenBelow(sX10Screen),
                     onPressed: onPopToSx10ButtonPressed,
                     child: Text('PopTo ${sX10Screen.name.toUpperCase()}'),
                   ),
                   NavigateButton(
-                    rubigoRouter: controller.rubigoRouter,
+                    rubigoRouter: rubigoRouter,
                     isEnabled: (screenStack) =>
                         screenStack.containsScreenBelow(sX10Screen),
                     onPressed: onRemoveSx10ButtonPressed,
                     child: Text('Remove ${sX10Screen.name.toUpperCase()}'),
                   ),
                   NavigateButton(
-                    rubigoRouter: controller.rubigoRouter,
+                    rubigoRouter: rubigoRouter,
                     isEnabled: (screenStack) =>
                         screenStack.containsScreenBelow(sX20Screen),
                     onPressed: onRemoveSx20ButtonPressed,
